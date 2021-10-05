@@ -11,6 +11,7 @@ Created on Wed Sep 29 14:23:48 2021
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import StratifiedKFold
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -34,11 +35,18 @@ if args.import_file is not None:
 else:   # manually set up a classifier
     
     if args.label_based:
-        
-        # label frequency based dummy classifier
         print("    label frequency based dummy classifier")
-        classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
-        classifier.fit(data["features"], data["labels"])
+        # use Stratified 2 fold cross validation to train classifier
+        skf = StratifiedKFold(n_splits=2, shuffle=False)
+        for train_index, test_index in skf.split(data):
+            # split data according to indices
+            X_train = data.iloc[train_index].loc[:, "features"]
+            X_test = data.iloc[test_index].loc[:, "features"]
+            y_train = data.iloc[train_index].loc[:, "labels"]
+            y_test = data.iloc[test_index].loc[:, "labels"]
+            # label frequency based dummy classifier
+            classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
+            classifier.fit(X_train, y_train)
 
 # now classify the given data
 prediction = classifier.predict(data["features"])
