@@ -36,16 +36,17 @@ else:   # manually set up a classifier
     
     if args.label_based:
         print("    label frequency based dummy classifier")
-        # use Stratified 2 fold cross validation to train classifier
-        skf = StratifiedKFold(n_splits=2, shuffle=False)
+        # label frequency based dummy classifier
+        classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
+        # use Stratified 5 fold cross validation to train classifier
+        skf = StratifiedKFold(n_splits=5, shuffle=False)
         for train_index, test_index in skf.split(data):
             # split data according to indices
             X_train = data.iloc[train_index].loc[:, "features"]
             X_test = data.iloc[test_index].loc[:, "features"]
             y_train = data.iloc[train_index].loc[:, "labels"]
             y_test = data.iloc[test_index].loc[:, "labels"]
-            # label frequency based dummy classifier
-            classifier = DummyClassifier(strategy = "stratified", random_state = args.seed)
+            
             classifier.fit(X_train, y_train)
 
 # now classify the given data
