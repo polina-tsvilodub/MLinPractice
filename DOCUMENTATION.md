@@ -18,6 +18,7 @@ We decided to implement the following metrics for our project:
 
 This suite of evaluation metrics allows the user to get a comprehensive picture of the classifier performance. In general, the user is adviced to use several metrics and interpret them in combination. 
 
+* TODO: document EvaluationMetrics class and decision
 ## Evaluation Schema 
 
 ## Evaluation Baseline

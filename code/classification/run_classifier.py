@@ -11,8 +11,7 @@ Created on Wed Sep 29 14:23:48 2021
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, cohen_kappa_score, roc_auc_score
-from code.evaluation.evaluation_metrics import Evaluator, Metrics
-from code.util import COLUMN_Y_TRUE 
+from code.evaluation.evaluation_metrics import EvaluationMetrics 
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -75,7 +74,9 @@ for metric_name, metric in evaluation_metrics:
     print("    {0}: {1}".format(metric_name, metric(data["labels"], prediction)))
 
 print("compute eval metrics via class")
-print(Metrics(data[COLUMN_Y_TRUE], prediction)._compute_metrics(data[COLUMN_Y_TRUE], prediction))    
+evaluator = EvaluationMetrics(y_true=data["labels"], y_pred=prediction)
+evaluator.compute_metrics(y_true=data["labels"], y_pred=prediction)
+#print(Metrics(data[COLUMN_Y_TRUE], prediction)._compute_metrics(data[COLUMN_Y_TRUE], prediction))    
 # export the trained classifier if the user wants us to do so
 if args.export_file is not None:
     with open(args.export_file, 'wb') as f_out:

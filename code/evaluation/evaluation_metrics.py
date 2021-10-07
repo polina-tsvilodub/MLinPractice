@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Class running different evaluation metrics to be used during cross validation and final test of classifier.
-The metrics contain accuracy, balanced accuracy, F1 score, Cohenäs kappa, ROC 
+Class running different evaluation metrics to be used during cross validation 
+and final test of classifier.
+The metrics contain accuracy, balanced accuracy, F1 score, Cohenäs kappa, ROC. 
 
 Created on Thu Oct 07 04:57:35 2021
 
@@ -10,41 +11,47 @@ Created on Thu Oct 07 04:57:35 2021
 """
 
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, cohen_kappa_score, roc_auc_score
-#from code.util import COLUMN_Y_TRUE
+import pandas as pd
+from code.util import EVAL_METRICS
 
-class Evaluator():
+class EvaluationMetrics():
     """Computes evaluation metrics given a DataFrame with ground truth and prediction columns"""
 
-    def __init__(self, y_true, y_pred):
+    def __init__(self, y_true, y_pred, metrics=EVAL_METRICS):
         """Initialize evaluation given griund truth column y_true and prediction column y_pred"""
         
         self._y_true = y_true
         self._y_pred = y_pred
+        self._results = pd.DataFrame(columns=list(EVAL_METRICS.keys()))
         
-    def _compute_metric(self, y_true, y_pred):
-        pass
-    
-class Metrics(Evaluator):
-    """TBD"""
-    
-    def __init__(self, y_true, y_pred):
-        super().__init__(y_true, y_pred)
-        
-    def _compute_metrics(self, y_true, y_pred):
+    def compute_metrics(self, y_true, y_pred, metrics=EVAL_METRICS):
         """
         Compute suite of evaluation metrics. 
+        Arguments
+        ---------
+            y_true: pd.DataFrame[labels]
+                Data column containing ground truth labels
+            y_pred: array
+                Array-like output of classifier instance containing predicted labels
+            metrics: list
+                list of sklearn evaluation metrics functions
+                default: EVAL_METRICS
         
-        Returns:
-            Dictionaty of shape {metric_name: metric}
+        Returns
+        --------
+            results: pd.DataFrame
+                DataFrame of shape (1 x metrics) containing results (row) of all 
+                evaluation metrics (columns) for given y_true and y_pred
         """
         
-        # collect all evaluation metrics
-        evaluation_metrics = {}
-        # list of metrics decided upon
-        metrics_list = [accuracy_score, balanced_accuracy_score, f1_score, cohen_kappa_score, roc_auc_score]
+        # instantiate results
+        results = self._results
+        row_idx = len(results)
+        # append metrics to results
+        for label, metric in metrics.items():
+            results.loc[row_idx, label] = metric(y_true, y_pred)
         
-        # append metrics to dictionary
-        for metric in metrics_list:
-            evaluation_metrics[str(metric)] = metric(y_true, y_pred)
-            
-        return evaluation_metrics    
+        print("    Results table: ")
+        print(results)  
+        # TODO: add saving df 
+        return results    
