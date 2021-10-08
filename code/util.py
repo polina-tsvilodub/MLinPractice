@@ -30,3 +30,5 @@ EVAL_METRICS = {
     "Cohens_kappa": cohen_kappa_score, 
     "ROC": roc_auc_score
     }
+# default folder for storing evaluation metrics results
+EVAL_RESULTS_PATH = "./results/"

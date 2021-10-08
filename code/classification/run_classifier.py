@@ -5,13 +5,14 @@ Train or evaluate a single classifier with its given set of hyperparameters.
 
 Created on Wed Sep 29 14:23:48 2021
 
-@author: lbechberger
+@author: ptsvilodub
 """
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, cohen_kappa_score, roc_auc_score
 from code.evaluation.evaluation_metrics import EvaluationMetrics 
+import pandas as pd
+from code.util import EVAL_RESULTS_PATH
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -20,11 +21,8 @@ parser.add_argument("-s", '--seed', type = int, help = "seed for the random numb
 parser.add_argument("-e", "--export_file", help = "export the trained classifier to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
-parser.add_argument("-a", "--accuracy", action = "store_true", help = "evaluate using accuracy")
-parser.add_argument("-ba", "--balanced_accuracy", action = "store_true", help = "evaluate using balanced accuracy")
-parser.add_argument("-f1", "--f1_score", action = "store_true", help = "evaluate using F1 score")
-parser.add_argument("-ck", "--cohens_kappa", action = "store_true", help = "evaluate using Cohen's kappa")
-parser.add_argument("-roc", "--roc", action = "store_true", help = "evaluate using Receiver Operating Characteristic Curve")
+parser.add_argument("-cve", "--cv_export", help = "optional path to location to store crossvalidation evaluation results", nargs='?', default=EVAL_RESULTS_PATH + "cv_eval_results.csv")
+parser.add_argument("-fe", "--final_classifier_export", help = "optional path to location to store final classifier evaluation results", nargs='?', default=EVAL_RESULTS_PATH + "final_classifier_eval_results.csv")
 
 args = parser.parse_args()
 
@@ -48,35 +46,25 @@ else:   # manually set up a classifier
 # now classify the given data
 prediction = classifier.predict(data["features"])
 
-# collect all evaluation metrics
-evaluation_metrics = []
-if args.accuracy:
-    evaluation_metrics.append(("accuracy", accuracy_score))
+# set up evaluator class instance for crossvalidation
+evaluator_cv = EvaluationMetrics(y_true=data["labels"], y_pred=prediction) 
+evaluator_cv.compute_metrics()
+# export crossvalidation evaluation results to default or provided location as csv
+if args.cv_export is not None:
+    with open(args.cv_export, 'a') as cv_out:
+        evaluator_cv._results.to_csv(cv_out)
+        
+# TODO: get best classifier instance after cross validation
 
-# balanced accuracy
-if args.balanced_accuracy:
-    evaluation_metrics.append(("balanced_accuracy", balanced_accuracy_score))    
-    
-# F1 score
-if args.f1_score:
-    evaluation_metrics.append(("f1_score", f1_score))    
+# set up another evaluator instance for the final classifier
+# adjust y_pred
+evaluator_final_classifier = EvaluationMetrics(y_true=data["labels"], y_pred=prediction)
+evaluator_final_classifier.compute_metrics()
+# export final classifier evaluation results to default or provided location as csv
+if args.final_classifier_export is not None:
+    with open(args.final_classifier_export, 'a') as cv_out:
+        evaluator_final_classifier._results.to_csv(cv_out)
 
-# Cohen's kappa score, representing inter- or intra-rater reliability
-if args.cohens_kappa:
-    evaluation_metrics.append(("cohens_kappa", cohen_kappa_score))
-
-# Receiver Operating Characteristic Curve, outputs AUC value
-if args.roc:
-    evaluation_metrics.append(("roc", roc_auc_score))    
-
-# compute and print them
-for metric_name, metric in evaluation_metrics: 
-    print("    {0}: {1}".format(metric_name, metric(data["labels"], prediction)))
-
-print("compute eval metrics via class")
-evaluator = EvaluationMetrics(y_true=data["labels"], y_pred=prediction)
-evaluator.compute_metrics(y_true=data["labels"], y_pred=prediction)
-#print(Metrics(data[COLUMN_Y_TRUE], prediction)._compute_metrics(data[COLUMN_Y_TRUE], prediction))    
 # export the trained classifier if the user wants us to do so
 if args.export_file is not None:
     with open(args.export_file, 'wb') as f_out:
