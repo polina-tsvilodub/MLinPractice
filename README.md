@@ -122,8 +122,12 @@ Here, `input.pickle` is a pickle file of the respective data subset, produced by
 By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
 - `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
 
-The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
-- `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
+The classifier is then evaluated, using the suite of evaluation metrics as specified in the dictionary EVAL_METRICS in code/util.py. 
+By default, the evaluation metrics are accuracy, balanced accuracy, F1 score, Cohen's kappa and the AUC of the ROC.
+The Evaluation results are written to a csv file.
+The following optional arguments can be provided:
+- `-cve`or `--cv_export`: path where the csv file containing evaluation results for all crossvalidation folds will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "cv_eval_results.csv" will be used.
+- `-fe`or `--final_classifier_export`: path where the csv file containing evaluation results for best performing classifier will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "final_classifier_eval_results.csv" will be used.
 
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
