@@ -32,3 +32,8 @@ EVAL_METRICS = {
     }
 # default folder for storing evaluation metrics results
 EVAL_RESULTS_PATH = "./results/"
+
+# efault column of tokenized tweets
+TWEET_TOKENIZED = "tweet_tokenized"
+# default suffix for creatnig column with stemmed output
+SUFFIX_STEMMED = "_stemmed"
