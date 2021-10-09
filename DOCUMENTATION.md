@@ -20,12 +20,23 @@ We decided to use the `nltk SnowballStemmer` as it generally perfors well on Eng
 Nevertheless, we think that generic English stemming will not decrease the data quality and just not improve it in the worst case. 
 
 **Implementation**
-In `code/preprocessing ` we implement `stemmer.py` which contains the class `Stemmer` which is a subclass of `Preprocessor`
+In `code/preprocessing ` we implement `stemmer.py` which contains the class `Stemmer` which is a subclass of `Preprocessor`.
 The subclass implements the following method(s):
 * `get_values(self, input, output):` stem the input column containing a list of tokens per sentence. Outputs a column containing a list of word stems per sentence. 
+
 ### Tokenization
 
-### Punctuation and special charcaters removal
+### Punctuation, emoji and special charcaters removal
+
+**Motivation**
+As a further preprocessing step, we implement a class for removing punctuation, emojis and special characters from the raw input tweets. We decided on this preprocessing step because it removes elements which are difficult for encoding as embeddings. 
+That is, words containing special characters or emojis usually are not recognized as words are decrease the quality of the embeddings of the texts. Since we want to encode the tweets as embeddings, we include this preprocessing step to increase embedding quality un subsequent feature extraction steps.  
+
+**Implementation**
+In `code/preprocessing` we implement `punctuation_remover.py` which contains the class `PunctuationRemover` which is a subclass of `Preprocessor`.
+The subclass implements the following method(s):
+* `_set_variables(self, inputs):` Set punctuation in `self._punctuation` that will be removed by the `_get_values`method.  
+* `_get_values(self, inputs):` remove punctuation, emojis and special characters from the input column containing a list of sentence strings. Outputs a column containing a list of clean sentence strings.  
 
 ## Evaluation Metrics
 

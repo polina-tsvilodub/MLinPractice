@@ -56,7 +56,7 @@ The script `run_preprocessing.py` is used to run various preprocessing steps on 
 ```python -m code.preprocessing.run_preprocessing path/to/input.csv path/to/output.csv```
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
 The preprocessing steps to take can be configured with the following flags:
-- `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
+- `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation, emojis and special characters are removed from the original tweet. A custom deemojifying function is implemented in `code/util.py`. (See `code/preprocessing/punctuation_remover.py` for more details)
 - `-st` or `--stemming`: A flag indicating whether the tokenized tweets should be stemmed. (see code/preprocessing/stemmer.py for more details). The output will be appended to a column named input + SUFFIX_STEMMED (default value: "_stemmed", can be adjusted in code/util.py/SUFFIX_STEMMED)
 - `--stemming_input`: An optional paramter specifying the name of the input column containing tokenized tweets for stemming. Default value: "tweet_tokenized" (can be changed in code/util.py/TWEET_TOKENIZED)
 

@@ -5,7 +5,7 @@ Preprocessor that removes punctuation from the original tweet text.
 
 Created on Wed Sep 29 09:45:56 2021
 
-@author: lbechberger
+@author: ptsvilodub
 """
 
 import string
@@ -16,19 +16,45 @@ from code.util import COLUMN_TWEET, COLUMN_PUNCTUATION, deEmojify
 # removes punctuation from the original tweet
 # inspired by https://stackoverflow.com/a/45600350
 class PunctuationRemover(Preprocessor):
+    """
+    Class for removing punctuation, emojis, and special characters.
+    Inherits from Preprocessor class.
+    """
     
     # constructor
     def __init__(self):
+        """
+        Initialize PunctuationRemover instance with default input column containing raw tweets
+        and default output column for clean text.
+        """
         # input column "tweet", new output column
         super().__init__([COLUMN_TWEET], COLUMN_PUNCTUATION)
     
     # set internal variables based on input columns
     def _set_variables(self, inputs):
+        """
+        Sets puntuation to be removed from text.
+        Arguments
+        ---------
+        inputs: list
+            List of input columns
+        """
         # store punctuation for later reference
         self._punctuation = "[{}]".format(string.punctuation)
         
     # get preprocessed column based on data frame and internal variables
     def _get_values(self, inputs):
+        """
+        Removes punctuation, special characters and emojis from internally saved input column 
+        Arguments
+        ---------
+        inputs: list
+            List of input columns
+        Returns
+        --------
+        column_stripped: list
+            List containing cleaned strings.
+        """
         # replace punctuation with empty string
         column = inputs[0].str.replace(self._punctuation, "")
         # remove all emojis
