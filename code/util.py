@@ -18,6 +18,7 @@ COLUMN_RETWEETS = "retweets_count"
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
+# default column of tokenized tweets
 TWEET_TOKENIZED = "tweet_tokenized"
 
 # default column names for evaluation
@@ -34,7 +35,5 @@ EVAL_METRICS = {
 # default folder for storing evaluation metrics results
 EVAL_RESULTS_PATH = "./results/"
 
-# efault column of tokenized tweets
-TWEET_TOKENIZED = "tweet_tokenized"
 # default suffix for creatnig column with stemmed output
 SUFFIX_STEMMED = "_stemmed"
