@@ -3,20 +3,47 @@
 """
 Created on Fri Oct  8 13:39:27 2021
 
-@author: ml
+@author: lschiesser
 """
 
+from code.preprocessing.preprocessor import Preprocessor
+from code.util import COLUMN_TWEET, TWEET_TOKENIZED
 from nltk.tokenize import TweetTokenizer
 
-class Tokenizer():
+class Tokenizer(Preprocessor):
     
     def __init__(self):
-        self.tokenized_tweets = []
+        """
+        Initialize tokenizer and super class preprocessor with precoded 
+        input and output column from code.util
+
+        """
+        # initialize Tokenizer
         self.tokenizer = TweetTokenizer(preserve_case=False, reduce_len=True, strip_handles=True)
+        # initiailze superclass
+        super().__init__([COLUMN_TWEET], TWEET_TOKENIZED)
         
-    def tokenize(self, tweets):
-        for tweet in tweets:
+    def _get_values(self, inputs):
+        """
+        Tokenizes the tweets given as inputs using TweetTokenizer.
+        Tokenizer removes handles, does not preserve case and reduces repeating sequences to length of 3
+
+        Parameters
+        ----------
+        inputs : list(string())
+            List of strings containing the tweets to be tokenized.
+
+        Returns
+        -------
+        tokenized_tweets : list(list(string()))
+            List of lists. Each nested list represents a tokenized tweet
+
+        """
+        tokenized_tweets = []
+        #iterate over each
+        for tweet in inputs:
             tokenized_tweet = self.tokenizer.tokenize(tweet)
-            self.tokenized_tweets.append(tokenized_tweet)
-        return self.tokenized_tweets
+            tokenized_tweets.append(tokenized_tweet)
+        
+        return tokenized_tweets
         
