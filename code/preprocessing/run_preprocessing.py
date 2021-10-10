@@ -12,6 +12,7 @@ import argparse, csv, pickle
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
+from code.preprocessing.tokenizer import Tokenizer
 from code.preprocessing.stemmer import Stemmer
 from code.util import SUFFIX_STEMMED, TWEET_TOKENIZED
 
@@ -23,6 +24,7 @@ parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-st", "--stemming", help = "stem tokenized sentences", action = "store_true")
 parser.add_argument("--stemming_input", help = "input column of tokenized sentence lists for stemming", default = TWEET_TOKENIZED)
+parser.add_argument("-t", "--tokenize", help="tokenize each sentence", action="store_true")
 args = parser.parse_args()
 
 # load data
@@ -32,6 +34,9 @@ df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator
 preprocessors = []
 if args.punctuation:
     preprocessors.append(PunctuationRemover())
+
+if args.tokenize:
+    preprocessors.append(Tokenizer())
 
 if args.stemming:
     preprocessors.append(Stemmer(args.stemming_input, args.stemming_input + SUFFIX_STEMMED))

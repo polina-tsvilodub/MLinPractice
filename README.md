@@ -57,8 +57,10 @@ The script `run_preprocessing.py` is used to run various preprocessing steps on 
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
 The preprocessing steps to take can be configured with the following flags:
 - `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
+- `-t` or `--tokenize`: flag inidicating whether tweets should be tokenized or not. Output will be appended to column named `tweet_tokenized` (can be changed in code/util.py/TWEET_TOKENIZED)
 - `-st` or `--stemming`: A flag indicating whether the tokenized tweets should be stemmed. (see code/preprocessing/stemmer.py for more details). The output will be appended to a column named input + SUFFIX_STEMMED (default value: "_stemmed", can be adjusted in code/util.py/SUFFIX_STEMMED)
 - `--stemming_input`: An optional paramter specifying the name of the input column containing tokenized tweets for stemming. Default value: "tweet_tokenized" (can be changed in code/util.py/TWEET_TOKENIZED)
+
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
@@ -72,7 +74,6 @@ The script takes the following optional parameters:
 - `-t` or `--test_size` determines the relative size of the test set and defaults to 0.2 (i.e., 20 % of the data).
 - `-v` or `--validation_size` determines the relative size of the validation set and defaults to 0.2 (i.e., 20 % of the data).
 - `-s` or `--seed` determines the seed for intializing the random number generator used for creating the randomized split. Using the same seed across multiple runs ensures that the same split is generated. If no seed is set, the current system time will be used.
-
 
 ## Feature Extraction
 
