@@ -28,12 +28,12 @@ class StopwordRemover(Preprocessor):
         Parameters
         ----------
         inputs : list(list(strings()))
-            DESCRIPTION.
+            Tokenized tweets.
 
         Returns
         -------
         tweets_no_stopwords : list(list(strings()))
-            DESCRIPTION.
+            Tokenized tweets without stopwords.
 
         """
         tweets_no_stopwords = []
