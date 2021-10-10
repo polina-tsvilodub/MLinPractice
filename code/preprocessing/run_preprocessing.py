@@ -12,6 +12,7 @@ import argparse, csv, pickle
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
+from code.preprocessing.stopword_remover import StopwordRemover
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -19,6 +20,7 @@ parser.add_argument("input_file", help = "path to the input csv file")
 parser.add_argument("output_file", help = "path to the output csv file")
 parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove punctuation")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
+parser.add_argument("-sw", "--stopwords", help="remove stopwords from tokenized tweets", action="store_true")
 args = parser.parse_args()
 
 # load data
@@ -28,6 +30,9 @@ df = pd.read_csv(args.input_file, quoting = csv.QUOTE_NONNUMERIC, lineterminator
 preprocessors = []
 if args.punctuation:
     preprocessors.append(PunctuationRemover())
+
+if args.stopwords:
+    preprocessors.append(StopwordRemover())
 
 # call all preprocessing steps
 for preprocessor in preprocessors:
