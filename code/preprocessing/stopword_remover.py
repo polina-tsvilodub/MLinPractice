@@ -36,7 +36,7 @@ class StopwordRemover(Preprocessor):
 
         """
         tweets_no_stopwords = []
-        for tweet in inputs:
+        for tweet in inputs[0]:
             tweet_no_stopwords = [word for word in tweet if not word in stopwords.words()]
             tweets_no_stopwords.append(tweet_no_stopwords)
         

@@ -26,7 +26,7 @@ Therefore, we decided to remove them during the preprocessing procedure to yield
 
 **Implementation**
 The stopword removal takes place after the tweet was already tokenized. We used the list of stopwords from nltk's `corpus` to decide which words are classified as stopwords.
-Thre stopword remover is implemented in `code/preprocessing/stopwrod_remover.py` which contains the class `StopwordRemover` which is a subclass of `Preprocessor`.
+The stopword remover is implemented in `code/preprocessing/stopword_remover.py` that contains the class `StopwordRemover` which is a subclass of `Preprocessor`.
 The subclass implements the method `_get_values(self)` which removes the stopwords from the already tokenized tweets (list of lists of strings) and outputs the result the tweets containing no stopwords (list of lists of strings).
 
 
