@@ -41,7 +41,7 @@ class Tokenizer(Preprocessor):
         """
         tokenized_tweets = []
         #iterate over each
-        for tweet in inputs:
+        for tweet in inputs[0]:
             tokenized_tweet = self.tokenizer.tokenize(tweet)
             tokenized_tweets.append(tokenized_tweet)
         
