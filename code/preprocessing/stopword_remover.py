@@ -9,6 +9,7 @@ Created on Sat Oct  9 12:00:44 2021
 from code.preprocessing.preprocessor import Preprocessor
 from code.util import TWEET_TOKENIZED, COLUMN_STOPWORDS
 from nltk.corpus import stopwords
+import nltk
 nltk.download('stopwords')
 
 
@@ -18,7 +19,7 @@ class StopwordRemover(Preprocessor):
         """
         Initiliaze class
         """
-        super().init([TWEET_TOKENIZED], COLUMN_STOPWORDS)
+        super().__init__([TWEET_TOKENIZED], COLUMN_STOPWORDS)
     
     def _get_values(self, inputs):
         """
