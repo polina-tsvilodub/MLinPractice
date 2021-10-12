@@ -39,20 +39,3 @@ EVAL_RESULTS_PATH = "./results/"
 
 # default suffix for creatnig column with stemmed output
 SUFFIX_STEMMED = "_stemmed"
-
-def deEmojify(text):
-    """
-    Custom function. Removes all Unicodes from a string
-    
-    Arguments
-    ---------
-    text: str
-        Input text
-    Returns
-    --------
-    str_de: str
-        Input text stripped off elements that cannot be encoded as ascii symbols    
-    """
-    str_en = text.encode("ascii", "ignore")
-    str_de = str_en.decode()
-    return str_de
