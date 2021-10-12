@@ -13,7 +13,8 @@ import pandas as pd
 import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL
+from code.feature_extraction.datetime_extractor import DateExtractor, TimeExtractor
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_DATE, COLUMN_TIME
 
 
 # setting up CLI
@@ -23,6 +24,7 @@ parser.add_argument("output_file", help = "path to the output pickle file")
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
+parser.add_argument("-dt", "--datetime", action="store_true", help="extract date and time from timestamp of tweet publication")
 args = parser.parse_args()
 
 # load data
@@ -40,6 +42,10 @@ else:    # need to create FeatureCollector manually
     if args.char_length:
         # character length of original tweet (without any changes)
         features.append(CharacterLength(COLUMN_TWEET))
+    
+    if args.datetime:
+        features.append(DateExtractor(COLUMN_DATE, ["month", "day"]))
+        features.append(TimeExtractor(COLUMN_TIME, ["hour", "minute"]))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
