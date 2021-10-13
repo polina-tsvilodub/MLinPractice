@@ -15,7 +15,7 @@ from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.stopword_remover import StopwordRemover
 from code.preprocessing.tokenizer import Tokenizer
 from code.preprocessing.stemmer import Stemmer
-from code.util import SUFFIX_STEMMED, TWEET_TOKENIZED
+from code.util import SUFFIX_STEMMED, COLUMN_STOPWORDS
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -25,7 +25,7 @@ parser.add_argument("-p", "--punctuation", action = "store_true", help = "remove
 parser.add_argument("-e", "--export_file", help = "create a pipeline and export to the given location", default = None)
 parser.add_argument("-sw", "--stopwords", help="remove stopwords from tokenized tweets", action="store_true")
 parser.add_argument("-st", "--stemming", help = "stem tokenized sentences", action = "store_true")
-parser.add_argument("--stemming_input", help = "input column of tokenized sentence lists for stemming", default = TWEET_TOKENIZED)
+parser.add_argument("--stemming_input", help = "input column of tokenized sentence lists for stemming", default = COLUMN_STOPWORDS)
 parser.add_argument("-t", "--tokenize", help="tokenize each sentence", action="store_true")
 args = parser.parse_args()
 
