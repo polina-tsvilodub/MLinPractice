@@ -18,6 +18,7 @@ class DateExtractor(FeatureExtractor):
     def _get_values(self, inputs):
         """
         Extracts month and day of month as integers from date column to make it suitable for machine learning algorithm
+        
         Parameters
         ----------
         inputs : list(string())
@@ -46,6 +47,20 @@ class TimeExtractor(FeatureExtractor):
         super().__init__([input_column], output_columns)
         
     def _get_values(self, inputs):
+        """
+        Extracts hour and minutes as integers from time column to make it suitable for machine learning algorithm
+
+        Parameters
+        ----------
+        inputs : list(string())
+            Time column which contains the time the tweet was published as a string.
+
+        Returns
+        -------
+        results : list(list(int()))
+            list of lists which contains the hour and minutes (both as int) of the tweet's publication.
+
+        """
         results = []
         for time_string in inputs[0]:
             time = datetime.datetime.strptime(time_string, "%H:%M:%S")
