@@ -57,6 +57,11 @@ The script `run_preprocessing.py` is used to run various preprocessing steps on 
 Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), while `output.csv` is the csv file where the output will be written.
 The preprocessing steps to take can be configured with the following flags:
 - `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
+- `-sw` or `--stopwords`: A new column "tweet_no_stopwords" is created, where all stopwords are removed from the tokenized tweet (See `code/preprocessing/stopword_remover.py` for more details)
+- `-t` or `--tokenize`: flag inidicating whether tweets should be tokenized or not. Output will be appended to column named `tweet_tokenized` (can be changed in code/util.py/TWEET_TOKENIZED)
+- `-st` or `--stemming`: A flag indicating whether the tokenized tweets should be stemmed. (see code/preprocessing/stemmer.py for more details). The output will be appended to a column named input + SUFFIX_STEMMED (default value: "_stemmed", can be adjusted in code/util.py/SUFFIX_STEMMED)
+- `--stemming_input`: An optional paramter specifying the name of the input column containing tokenized tweets for stemming. Default value: "tweet_tokenized" (can be changed in code/util.py/TWEET_TOKENIZED)
+
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
@@ -70,7 +75,6 @@ The script takes the following optional parameters:
 - `-t` or `--test_size` determines the relative size of the test set and defaults to 0.2 (i.e., 20 % of the data).
 - `-v` or `--validation_size` determines the relative size of the validation set and defaults to 0.2 (i.e., 20 % of the data).
 - `-s` or `--seed` determines the seed for intializing the random number generator used for creating the randomized split. Using the same seed across multiple runs ensures that the same split is generated. If no seed is set, the current system time will be used.
-
 
 ## Feature Extraction
 
@@ -123,8 +127,12 @@ Here, `input.pickle` is a pickle file of the respective data subset, produced by
 By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
 - `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
 
-The classifier is then evaluated, using the evaluation metrics as specified through the following optional arguments:
-- `-a`or `--accuracy`: Classification accurracy (i.e., percentage of correctly classified examples).
+The classifier is then evaluated, using the suite of evaluation metrics as specified in the dictionary EVAL_METRICS in code/util.py. 
+By default, the evaluation metrics are accuracy, balanced accuracy, F1 score, Cohen's kappa and the AUC of the ROC.
+The Evaluation results are written to a csv file.
+The following optional arguments can be provided:
+- `-cve`or `--cv_export`: path where the csv file containing evaluation results for all crossvalidation folds will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "cv_eval_results.csv" will be used.
+- `-fe`or `--final_classifier_export`: path where the csv file containing evaluation results for best performing classifier will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "final_classifier_eval_results.csv" will be used.
 
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
