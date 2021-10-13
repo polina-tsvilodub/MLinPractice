@@ -39,3 +39,7 @@ EVAL_RESULTS_PATH = "./results/"
 
 # default suffix for creatnig column with stemmed output
 SUFFIX_STEMMED = "_stemmed"
+
+# default column suffix for embeddings column
+EMBEDDING_COL = "_embedding"
+

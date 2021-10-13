@@ -22,7 +22,9 @@ class CharacterLength(FeatureExtractor):
     
     # compute the word length based on the inputs
     def _get_values(self, inputs):
-        
+        print("input shape: ", np.array(inputs[0]).shape, np.array(inputs[0])[:10])
         result = np.array(inputs[0].str.len())
+        print("results shape: ", result.shape, result[:10])
         result = result.reshape(-1,1)
+        print("reshaped result shape: ", result.shape, result[:10])
         return result
