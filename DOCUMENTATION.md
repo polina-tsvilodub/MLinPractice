@@ -38,11 +38,24 @@ The subclass implements the following method(s):
 * `_set_variables(self, inputs):` Set punctuation in `self._punctuation` that will be removed by the `_get_values`method.  
 * `_get_values(self, inputs):` remove punctuation, emojis and special characters from the input column containing a list of sentence strings. Outputs a column containing a list of clean sentence strings.  
 
+  
+## Feature Extraction
+Below, we document the features we extract and feed into our classifier. The selection of these features is based on the list brainstormed during the respective seminar session, as well as on our general knowledge of useful features in classification tasks.
+
+### Text embeddings
+
+**Motivation**
+The main feature of our data is the actual content, i.e., text of the tweet to be categorized. State-of-the-art representations of text and its meaning are so-called embeddings (e.g., Mikolov et al., 2013). Therefore, we decided to use embeddings in order to represent the tweet, as well as the hashtags accompanying the tweet.
+Since creating (i.e., training) embeddings from scratch is quite costly, we decided to use available pretrained solutions. More specifically, we decided to use pretrained 25-dimensional GloVe embeddings provided by the `gensim` package, due to their easily accessible API.
+But, more importantly, the `gensim` GloVe emebddings were created using a Twitter dataset, which makes a very suitable choice for our use case. Furthermore, we decided to use relatively low-dimensional embeddings in order to avoid dimensionality issues during classification. 
+
+**Implementation**
+
 ## Evaluation Metrics
 
 **Motivation**
 We decided to implement the following metrics for our project:
-* standard accuracy (as provided by the departure point code): proportion of correctly identified labels. This metric is used in many projects and can, theerfore, be interesting for comparison purposes.
+* standard accuracy (as provided by the departure point code): proportion of correctly identified labels. This metric is used in many projects and can, therefore, be interesting for comparison purposes.
 * balanced accuracy (accuracy score compensated for imbalanced datasets): average of recall per class. This metric is better suited for class imbalanced datasets, whereby our dataset is an instance thereof.
 * F1-score (a score combining precision and recall): it is more representative than just the accuracy due to taking into account both correct identifications as well as successes of getting the underrepresented class.
 * Cohen's kappa: a more robust score for imblanaced datasets; it is also called interrater reliability score and accounts for the probability of corretc classification at random.
