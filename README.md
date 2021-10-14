@@ -59,9 +59,6 @@ The preprocessing steps to take can be configured with the following flags:
 - `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
 - `-sw` or `--stopwords`: A new column "tweet_no_stopwords" is created, where all stopwords are removed from the tokenized tweet (See `code/preprocessing/stopword_remover.py` for more details)
 - `-t` or `--tokenize`: flag inidicating whether tweets should be tokenized or not. Output will be appended to column named `tweet_tokenized` (can be changed in code/util.py/TWEET_TOKENIZED)
-- `-st` or `--stemming`: A flag indicating whether the tokenized tweets should be stemmed. (see code/preprocessing/stemmer.py for more details). The output will be appended to a column named input + SUFFIX_STEMMED (default value: "_stemmed", can be adjusted in code/util.py/SUFFIX_STEMMED)
-- `--stemming_input`: An optional paramter specifying the name of the input column containing tokenized tweets for stemming. Default value: "tweet_tokenized" (can be changed in code/util.py/TWEET_TOKENIZED)
-
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.

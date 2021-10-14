@@ -10,20 +10,6 @@ Created on Wed Oct  6 05:33:00 2021
 
 ## Preprocessing steps
 
-### Stemming
-
-**Motivation**
-We decided to implement a stemmer as a preprocessing step because stemming allows to clean data by making it more uniform 
-and removing noise coming from superficial word form variation. This variation usually does not carry critical semantic meaning which would be valuable for classifying the tweets, while increasing computational costs. 
-Therefore, stemming is generally considered a common preprocessing step in text-based machine learning tasks.
-We decided to use the `nltk SnowballStemmer` as it generally perfors well on English data without overgeneralizing too much. The latter point is important because we set the stemmer language to English, although some tweets in our dataset might come from a different language.
-Nevertheless, we think that generic English stemming will not decrease the data quality and just not improve it in the worst case. 
-
-**Implementation**
-In `code/preprocessing ` we implement `stemmer.py` which contains the class `Stemmer` which is a subclass of `Preprocessor`.
-The subclass implements the following method(s):
-* `get_values(self, input, output):` stem the input column containing a list of tokens per sentence. Outputs a column containing a list of word stems per sentence. 
-
 ### Tokenization
 
 ### Punctuation, emoji and special charcaters removal
