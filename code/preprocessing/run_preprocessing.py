@@ -26,7 +26,8 @@ parser.add_argument("-e", "--export_file", help = "create a pipeline and export 
 parser.add_argument("-sw", "--stopwords", help="remove stopwords from tokenized tweets", action="store_true")
 parser.add_argument("-st", "--stemming", help = "stem tokenized sentences", action = "store_true")
 parser.add_argument("--stemming_input", help = "input column of tokenized sentence lists for stemming", default = TWEET_TOKENIZED)
-parser.add_argument("-t", "--tokenize", help="tokenize each sentence", action="store_true")
+parser.add_argument("-t", "--tokenize", help = "tokenize each sentence", action="store_true")
+
 args = parser.parse_args()
 
 # load data

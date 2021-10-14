@@ -43,3 +43,5 @@ SUFFIX_STEMMED = "_stemmed"
 # default column suffix for embeddings column
 EMBEDDING_COL = "_embedding"
 
+# default column with hashtags
+COLUMN_HASHTAG = "hashtags"
