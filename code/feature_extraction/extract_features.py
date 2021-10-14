@@ -14,7 +14,7 @@ import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.embeddings import Embeddings
 from code.feature_extraction.feature_collector import FeatureCollector
-from code.util import COLUMN_TWEET, COLUMN_LABEL, TWEET_TOKENIZED, COLUMN_HASHTAG
+from code.util import COLUMN_TWEET, COLUMN_LABEL, TWEET_TOKENIZED, COLUMN_HASHTAG, EMBEDDING_INPUT
 
 
 # setting up CLI
@@ -46,7 +46,7 @@ else:    # need to create FeatureCollector manually
         features.append(CharacterLength(COLUMN_TWEET))
         
     if args.embedding:
-        features.append(Embeddings(TWEET_TOKENIZED))
+        features.append(Embeddings(EMBEDDING_INPUT))
         
     if args.hashtag:
         features.append(Embeddings(COLUMN_HASHTAG))
