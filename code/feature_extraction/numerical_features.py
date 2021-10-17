@@ -16,4 +16,22 @@ class NumericalFeatureExtractor(FeatureExtractor):
     
     
     def _get_values(self, inputs):
-        return
+        """
+        This functioni extracts the number of a feature
+
+        Parameters
+        ----------
+        inputs : list(list())
+            list of lists where each nested list contains hashtags or mentions. 
+
+        Returns
+        -------
+        result : list(int())
+            list of ints where each in represents the number of hashtags or mentions in a tweet.
+
+        """
+        result = []
+        for item in input[0]:
+            result.append(len(item))
+        result = np.array(result)
+        return result
