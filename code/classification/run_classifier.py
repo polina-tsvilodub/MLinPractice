@@ -10,10 +10,10 @@ Created on Wed Sep 29 14:23:48 2021
 
 import argparse, pickle
 from sklearn.dummy import DummyClassifier
+from sklearn.svm import SVC
 from code.evaluation.evaluation_metrics import EvaluationMetrics 
-import pandas as pd
 from code.util import EVAL_RESULTS_PATH
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, GridSearchCV
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Classifier")
@@ -22,9 +22,10 @@ parser.add_argument("-s", '--seed', type = int, help = "seed for the random numb
 parser.add_argument("-e", "--export_file", help = "export the trained classifier to the given location", default = None)
 parser.add_argument("-i", "--import_file", help = "import a trained classifier from the given location", default = None)
 parser.add_argument("-m", "--majority", action = "store_true", help = "majority class classifier")
-parser.add_argument("-cve", "--cv_export", help = "optional path to location to store crossvalidation evaluation results", nargs='?', default=EVAL_RESULTS_PATH + "cv_eval_results.csv")
+parser.add_argument("-cve", "--cv_export", help = "optional path to location to store crossvalidation evaluation results", nargs="?", default=EVAL_RESULTS_PATH + "cv_eval_results.csv")
 parser.add_argument("-fe", "--final_classifier_export", help = "optional path to location to store final classifier evaluation results", nargs='?', default=EVAL_RESULTS_PATH + "final_classifier_eval_results.csv")
 parser.add_argument("-l", "--label_based", action = "store_true", help = "label frequency based classifier")
+paraser.add_argument("-svm", "--svm", help = "fit SVM classifier using k-fold cross-validation with grid search", nargs = "?", default = 5)
 
 args = parser.parse_args()
 
@@ -53,7 +54,15 @@ else:   # manually set up a classifier
             y_test = data.iloc[test_index].loc[:, "labels"]
             
             classifier.fit(X_train, y_train)
-
+    # use SVM classifier bz default
+    if args.svm:        
+        print("    production SVM classifier")
+        # SVM classifier with default parameters
+        classifier = SVC()
+        # fit
+        classifier.fit(data["features"], data["labels"])
+        # cross-validation TBD
+        
 # now classify the given data
 prediction = classifier.predict(data["features"])
 
