@@ -27,7 +27,7 @@ class NumericalFeatureExtractor(FeatureExtractor):
         Returns
         -------
         result : list(int())
-            list of ints where each in represents the number of hashtags or mentions in a tweet.
+            list of ints where each int represents the number of hashtags or mentions in a tweet.
 
         """
         result = []
