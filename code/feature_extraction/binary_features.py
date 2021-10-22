@@ -29,11 +29,11 @@ class BinaryFeatureExtractor(FeatureExtractor):
                     # and/or if there video == 1) and 0 if media is absent (list of photos == 0 and video == 0)
                     result.append(int(len(tmp[0]) > 0 or bool(tmp[1])))
             else:
-                # this feature is not a combined feature, it rather showss the absence (0) or presence (1) of it
+                # this feature is not a combined feature, it rather shows the absence (0) or presence (1) of it
                 for link in inputs[0]:
                     # the feature is present if the list is bigger than 0 and absent if it is 0
                     result.append(int(len(link)>0))
         else:
-            return
+            raise TypeError("The input variables could not be processed. Make sure the input is a list or a nested list")
         result = np.array(result)
         return result
