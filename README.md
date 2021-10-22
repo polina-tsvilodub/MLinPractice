@@ -126,8 +126,10 @@ The classifier is then evaluated, using the suite of evaluation metrics as speci
 By default, the evaluation metrics are accuracy, balanced accuracy, F1 score, Cohen's kappa and the AUC of the ROC.
 The Evaluation results are written to a csv file.
 The following optional arguments can be provided:
-- `-cve`or `--cv_export`: path where the csv file containing evaluation results for all crossvalidation folds will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "cv_eval_results.csv" will be used.
-- `-fe`or `--final_classifier_export`: path where the csv file containing evaluation results for best performing classifier will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "final_classifier_eval_results.csv" will be used.
+- `-cve`or `--cv_export`: path where the csv file containing evaluation results of the crossvalidation folds of the SVM classifier will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "cv_eval_results.csv" will be used.
+- `-de`or `--dummy_classifier_export`: path where the csv file containing evaluation results for the dummy classifier will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "dummy_classifier_eval_results.csv" will be used.
+- `-svm`or `--svm_classifier`: flag if the SVM classifier will be used.
+- `-svmk`or `--svm_k`: number of folds to be used in the cross-validation GridSearch on the SVM classifier.
 
 
 Moreover, the script support importing and exporting trained classifiers with the following optional arguments:
