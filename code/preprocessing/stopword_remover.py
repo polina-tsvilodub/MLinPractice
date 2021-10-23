@@ -15,11 +15,11 @@ nltk.download('stopwords')
 
 class StopwordRemover(Preprocessor):
     
-    def __init__(self):
+    def __init__(self, input_column = TWEET_TOKENIZED, output_column = COLUMN_STOPWORDS):
         """
         Initiliaze class
         """
-        super().__init__([TWEET_TOKENIZED], COLUMN_STOPWORDS)
+        super().__init__([input_column], output_column)
     
     def _get_values(self, inputs):
         """
