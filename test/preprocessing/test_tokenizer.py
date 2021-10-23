@@ -25,7 +25,7 @@ class TokenizerTest(unittest.TestCase):
     
     def test_tokenization_single_sentence(self):
         input_text = "This is an example with an @mario mention"
-        output_text = "['this', 'is', 'an', 'example', 'with', 'an', 'mention']"
+        output_text = ['this', 'is', 'an', 'example', 'with', 'an', 'mention']
         
         input_df = pd.DataFrame()
         input_df[self.INPUT_COLUMN] = [input_text]
