@@ -14,6 +14,9 @@ from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, c
 COLUMN_TWEET = "tweet"
 COLUMN_LIKES = "likes_count"
 COLUMN_RETWEETS = "retweets_count"
+COLUMN_PHOTO = "photos"
+COLUMN_VIDEO = "video"
+COLUMN_URL = "urls"
 COLUMN_HASHTAGS = "hashtags"
 COLUMN_MENTIONS = "mentions"
 COLUMN_DATE = "date"
@@ -22,6 +25,8 @@ COLUMN_TIME = "time"
 # column names of novel columns for preprocessing
 COLUMN_LABEL = "label"
 COLUMN_PUNCTUATION = "tweet_no_punctuation"
+COLUMN_MEDIA = "media"
+COLUMN_URL_PRESENT = "urls_present"
 
 # default column names for evaluation
 COLUMN_Y_TRUE = "labels"

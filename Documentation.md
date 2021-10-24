@@ -1,5 +1,17 @@
 ## Feature Extraction
 
+### Binary Feature Extraction
+
+**Motivation**
+
+There are some aspects of a tweet where it is not necessary to know how much of that aspect is in the tweet or what specific content the aspect has.
+Instead, it is just interesting to know if the aspect is there or not. 
+Therefore, we decided to implement a class that produces binary features from the dataset, indicating the presence (or absense) of a given aspect.
+
+**Implementation**
+The binary feature eextractor is implemented in the class `BinaryFeatureExtractor` which is located in `code/feature_extraction/binary_features.py` and is a subclass of `FeatureExtractor`.
+The class implements the method `_get_values()` which extracts the binary features from the given column of the dataset.
+
 ### Numerical Feature Extraction
 
 **Motivation**
