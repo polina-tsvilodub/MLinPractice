@@ -6,7 +6,7 @@
 
 There are some aspects of a tweet where it is not necessary to know how much of that aspect is in the tweet or what specific content the aspect has.
 Instead, it is just interesting to know if the aspect is there or not. 
-Therefore, we decided to implement a class that produces binary features from the dataset.
+Therefore, we decided to implement a class that produces binary features from the dataset, indicating the presence (or absense) of a given aspect.
 
 **Implementation**
 The binary feature eextractor is implemented in the class `BinaryFeatureExtractor` which is located in `code/feature_extraction/binary_features.py`.
