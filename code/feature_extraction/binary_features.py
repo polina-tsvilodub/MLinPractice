@@ -18,7 +18,7 @@ class BinaryFeatureExtractor(FeatureExtractor):
     def _get_values(self, inputs):
         result = []
         # only process feature if it's a list
-        # one feature is combined from two columns in the dataset called media present
+        # one feature called media present is combined from two columns in the dataset 
         # it is combined from the columns photos and video
         if "photos" in self.input_columns:
             # column photos comes as a list of json objects
