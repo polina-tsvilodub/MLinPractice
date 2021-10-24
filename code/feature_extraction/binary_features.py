@@ -22,7 +22,7 @@ class BinaryFeatureExtractor(FeatureExtractor):
         # it is combined from the columns photos and video
         if "photos" in self.input_columns:
             # column photos comes as a list of json objects
-            # column photos comes as a boolean number indicating presence (1) or absence (0) of video
+            # column video comes as a boolean number indicating presence (1) or absence (0) of video
             for tmp in inputs[0]:
                 # this expression returns 1 if there is media persent (if list of photos bigger than 0
                 # and/or if there video == 1) and 0 if media is absent (list of photos == 0 and video == 0)
