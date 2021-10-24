@@ -14,7 +14,9 @@ import numpy as np
 from code.feature_extraction.character_length import CharacterLength
 from code.feature_extraction.feature_collector import FeatureCollector
 from code.feature_extraction.binary_features import BinaryFeatureExtractor
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_PHOTO, COLUMN_VIDEO, COLUMN_URL, COLUMN_MEDIA, COLUMN_URL_PRESENT
+from code.feature_extraction.numerical_features import NumericalFeatureExtractor
+from code.feature_extraction.datetime_extractor import DateExtractor, TimeExtractor
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_DATE, COLUMN_TIME, COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTO, COLUMN_VIDEO, COLUMN_URL, COLUMN_MEDIA, COLUMN_URL_PRESENT
 
 
 # setting up CLI
@@ -25,6 +27,9 @@ parser.add_argument("-e", "--export_file", help = "create a pipeline and export 
 parser.add_argument("-i", "--import_file", help = "import an existing pipeline from the given location", default = None)
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
 parser.add_argument("-b", "--binary", action = "store_true", help="extract binary features")
+parser.add_argument("-h", "--hashtags", action="store_true", help="compute the number of hashtags used in a tweet")
+parser.add_argument("-m", "--mentions", action="store_true", help="compute number of @ mentions used in a tweet")
+parser.add_argument("-dt", "--datetime", action="store_true", help="extract date and time from timestamp of tweet publication")
 args = parser.parse_args()
 
 # load data
@@ -46,6 +51,16 @@ else:    # need to create FeatureCollector manually
     if args.binary:
         features.append(BinaryFeatureExtractor([COLUMN_PHOTO, COLUMN_VIDEO], COLUMN_MEDIA))
         features.append(BinaryFeatureExtractor(COLUMN_URL, COLUMN_URL_PRESENT))
+
+    if args.hashtags:
+        features.append(NumericalFeatureExtractor(COLUMN_HASHTAGS))
+    
+    if args.mentions:
+        features.append(NumericalFeatureExtractor(COLUMN_MENTIONS))
+
+    if args.datetime:
+        features.append(DateExtractor(COLUMN_DATE, ["month", "day"]))
+        features.append(TimeExtractor(COLUMN_TIME, ["hour", "minute"]))
     
     # create overall FeatureCollector
     feature_collector = FeatureCollector(features)
