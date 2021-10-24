@@ -25,7 +25,7 @@ class BinaryFeatureExtractor(FeatureExtractor):
             # column video comes as a boolean number indicating presence (1) or absence (0) of video
             for tmp in inputs[0]:
                 # this expression returns 1 if there is media persent (if list of photos bigger than 0
-                # and/or if there video == 1) and 0 if media is absent (list of photos == 0 and video == 0)
+                # and/or if video == 1) and 0 if media is absent (list of photos == 0 and video == 0)
                 result.append(int(len(tmp[0]) > 0 or bool(tmp[1])))
         else:
             # this feature is not a combined feature, it rather shows the absence (0) or presence (1) of it
