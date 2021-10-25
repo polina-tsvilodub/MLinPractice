@@ -50,7 +50,7 @@ EVAL_RESULTS_PATH = "./results/"
 SUFFIX_STEMMED = "_stemmed"
 
 # default embedding input column
-EMBEDDING_INPUT = "tweet_no_stopwords_stemmed"
+EMBEDDING_INPUT = "tweet_no_stopwords"
 # default column suffix for embeddings column
 EMBEDDING_COL = "_embedding"
 

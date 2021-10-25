@@ -30,7 +30,7 @@ parser.add_argument("-i", "--import_file", help = "import an existing pipeline f
 parser.add_argument("-c", "--char_length", action = "store_true", help = "compute the number of characters in the tweet")
 parser.add_argument("-emb", "--embedding", action = "store_true", help = "compute GloVe embeddings of the tweet")
 parser.add_argument("-b", "--binary", action = "store_true", help="extract binary features")
-parser.add_argument("-h", "--hashtags", action="store_true", help="compute the number of hashtags used in a tweet")
+parser.add_argument("-ht", "--hashtags", action="store_true", help="compute the number of hashtags used in a tweet")
 parser.add_argument("-m", "--mentions", action="store_true", help="compute number of @ mentions used in a tweet")
 parser.add_argument("-dt", "--datetime", action="store_true", help="extract date and time from timestamp of tweet publication")
 args = parser.parse_args()
