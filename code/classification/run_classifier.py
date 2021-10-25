@@ -26,7 +26,7 @@ parser.add_argument("-cve", "--cv_export", help = "optional path to location to 
 parser.add_argument("-de", "--dummy_classifier_export", help = "optional path to location to store dummy classifier evaluation results", nargs='?', default=EVAL_RESULTS_PATH + "dummy_classifier_eval_results.csv")
 parser.add_argument("-l", "--label_based", action = "store_true", help = "label frequency based classifier")
 parser.add_argument("-svm", "--svm_classifier", help = "fit SVM classifier with grid search", action = "store_true")
-parser.add_argument("-svmk", "--svm_k", help = "k for cross validation for fitting SVM classifier", nargs = "?", default = 5)
+parser.add_argument("-svmk", "--svm_k", help = "k for cross validation for fitting SVM classifier", nargs = "?", default = 5, type=int)
 
 args = parser.parse_args()
 
@@ -66,11 +66,10 @@ else:   # manually set up a classifier
             )
         # call grid search and CV
         svm_clf.fit(data["features"], data["labels"])
-        print(svm_clf)
         # TODO write out all results ?
         # get best classifier
         svm_best = svm_clf.best_estimator_
-        print(svm_best)
+        print('     Best SVM classifier parameters: ', svm_best)
         
 # classify data with the given train data with baseline dummy classifier
 prediction_dummy = classifier.predict(data["features"])     
@@ -79,6 +78,7 @@ prediction_svm = svm_best.predict(data["features"])
 
 # set up evaluator class instance for crossvalidation results of the SVM
 evaluator_cv = EvaluationMetrics(y_true=data["labels"], y_pred=prediction_svm) 
+print("     Evaluation metrics of best SVM classifier:")
 evaluator_cv.compute_metrics()
 # export crossvalidation evaluation results to default or provided location as csv
 if args.cv_export is not None:
@@ -87,6 +87,7 @@ if args.cv_export is not None:
         
 # set up another evaluator instance for the dummy classifier
 evaluator_dummy_classifier = EvaluationMetrics(y_true=data["labels"], y_pred=prediction_dummy)
+print("    Evaluation metrics of label frequency based dummy classifier:")
 evaluator_dummy_classifier.compute_metrics()
 # export final classifier evaluation results to default or provided location as csv
 if args.dummy_classifier_export is not None:
