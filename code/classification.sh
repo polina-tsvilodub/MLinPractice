@@ -10,6 +10,6 @@ python -m code.classification.run_classifier data/feature_extraction/training.pi
 
 # run feature extraction on validation set (with pre-fit extractors)
 echo "  validation set"
-python -m code.classification.run_classifier data/feature_extraction/validation.pickle -i data/classification/classifier.pickle --label_based --svm_classifier --svm_k=5
+python -m code.classification.run_classifier data/feature_extraction/validation.pickle -i data/classification/classifier.pickle --label_based --svm_classifier
 
 # don't touch the test set, yet, because that would ruin the final generalization experiment!
