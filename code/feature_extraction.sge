@@ -5,6 +5,11 @@
 #$ -pe default 2
 #$ -o $HOME
 #$ -e $HOME
+#$ -l h=*cippy*
+
+export PATH="$HOME/miniconda/bin:$PATH"
+eval "$(conda shell.bash hook)"
+conda activate MLinPractice
 
 # create directory if not yet existing
 mkdir -p data/feature_extraction/
@@ -18,3 +23,5 @@ echo "  validation set"
 python -m code.feature_extraction.extract_features data/preprocessing/split/validation.csv data/feature_extraction/validation.pickle -i data/feature_extraction/pipeline.pickle --char_length --embedding -dt -b -m -ht
 echo "  test set"
 python -m code.feature_extraction.extract_features data/preprocessing/split/test.csv data/feature_extraction/test.pickle -i data/feature_extraction/pipeline.pickle --char_length --embedding -dt -b -m -ht
+
+conda deactivate MLinPractice
