@@ -31,7 +31,7 @@ class NumericalFeatureExtractor(FeatureExtractor):
 
         """
         result = []
-        for item in input[0]:
+        for item in inputs[0]:
             result.append(len(item))
         result = np.array(result)
         return result

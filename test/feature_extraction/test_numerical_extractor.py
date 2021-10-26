@@ -33,7 +33,7 @@ class TestNumerical(unittest.TestCase):
         # apply PunctuationRemover to test cases        
         output = self.numft.fit_transform(input_df)
         # compare class output to expected output
-        self.assertListEqual(output, output_tokens)
+        self.assertListEqual(list(output), output_tokens)
 
 if __name__ == '__main__':
     unittest.main()
