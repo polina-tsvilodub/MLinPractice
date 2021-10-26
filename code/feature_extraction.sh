@@ -11,4 +11,4 @@ python -m code.feature_extraction.extract_features data/preprocessing/split/trai
 echo "  validation set"
 python -m code.feature_extraction.extract_features data/preprocessing/split/validation.csv data/feature_extraction/validation.pickle -i data/feature_extraction/pipeline.pickle --char_length --embedding -dt
 echo "  test set"
-python -m code.feature_extraction.extract_features data/preprocessing/split/test.csv data/feature_extraction/test.pickle -i data/feature_extraction/pipeline.pickle --char_length --embedding
+python -m code.feature_extraction.extract_features data/preprocessing/split/test.csv data/feature_extraction/test.pickle -i data/feature_extraction/pipeline.pickle --char_length --embedding -dt
