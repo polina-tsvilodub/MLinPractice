@@ -7,7 +7,7 @@ Created on Fri Oct  8 13:39:27 2021
 """
 
 from code.preprocessing.preprocessor import Preprocessor
-from code.util import COLUMN_TWEET, TWEET_TOKENIZED
+from code.util import COLUMN_PUNCTUATION, TWEET_TOKENIZED
 from nltk.tokenize import TweetTokenizer
 
 class Tokenizer(Preprocessor):
@@ -21,7 +21,7 @@ class Tokenizer(Preprocessor):
         # initialize Tokenizer
         self.tokenizer = TweetTokenizer(preserve_case=False, reduce_len=True, strip_handles=True)
         # initiailze superclass
-        super().__init__([COLUMN_TWEET], TWEET_TOKENIZED)
+        super().__init__([COLUMN_PUNCTUATION], TWEET_TOKENIZED)
         
     def _get_values(self, inputs):
         """

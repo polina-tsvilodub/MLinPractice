@@ -14,8 +14,7 @@ from sklearn.pipeline import make_pipeline
 from code.preprocessing.punctuation_remover import PunctuationRemover
 from code.preprocessing.stopword_remover import StopwordRemover
 from code.preprocessing.tokenizer import Tokenizer
-from code.preprocessing.stemmer import Stemmer
-from code.util import SUFFIX_STEMMED, TWEET_TOKENIZED
+from code.util import SUFFIX_STEMMED, COLUMN_STOPWORDS
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Various preprocessing steps")
@@ -27,7 +26,6 @@ parser.add_argument("-sw", "--stopwords", help="remove stopwords from tokenized 
 parser.add_argument("-st", "--stemming", help = "stem tokenized sentences", action = "store_true")
 parser.add_argument("--stemming_input", help = "input column of tokenized sentence lists for stemming", default = TWEET_TOKENIZED)
 parser.add_argument("-t", "--tokenize", help = "tokenize each sentence", action="store_true")
-
 args = parser.parse_args()
 
 # load data
@@ -43,9 +41,6 @@ if args.tokenize:
 
 if args.stopwords:
     preprocessors.append(StopwordRemover())
-
-if args.stemming:
-    preprocessors.append(Stemmer(args.stemming_input, args.stemming_input + SUFFIX_STEMMED))
     
 # call all preprocessing steps
 for preprocessor in preprocessors:
