@@ -4,7 +4,7 @@
 mkdir -p data/preprocessing/split/
 
 # download nltk data
-python -m nltk.downloader all
+# python -m nltk.downloader all
 
 # add labels
 echo "  creating labels"
