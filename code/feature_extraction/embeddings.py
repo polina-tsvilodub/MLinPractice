@@ -51,7 +51,6 @@ class Embeddings(FeatureExtractor):
         sent_embeddings = []
         # iterate over sentences
         for sent in inputs[0]:
-            print(sent)
             # compute word embeddings of each sentence as a list
             # while filtering out OOV tokens
             # then compute average over all embedded words to get sentence-level embedding (25-dimensional)
