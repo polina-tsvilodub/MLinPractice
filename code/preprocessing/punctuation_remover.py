@@ -22,13 +22,13 @@ class PunctuationRemover(Preprocessor):
     """
     
     # constructor
-    def __init__(self):
+    def __init__(self, input_col = COLUMN_TWEET, output_col = COLUMN_PUNCTUATION):
         """
         Initialize PunctuationRemover instance with default input column containing raw tweets
         and default output column for clean text.
         """
         # input column "tweet", new output column
-        super().__init__([COLUMN_TWEET], COLUMN_PUNCTUATION)
+        super().__init__([input_col], output_col)
     
     def deEmojify(text):
         """

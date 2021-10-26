@@ -12,7 +12,7 @@ from nltk.tokenize import TweetTokenizer
 
 class Tokenizer(Preprocessor):
     
-    def __init__(self):
+    def __init__(self, input_column = COLUMN_PUNCTUATION, output_column = TWEET_TOKENIZED):
         """
         Initialize tokenizer and super class preprocessor with precoded 
         input and output column from code.util
@@ -21,7 +21,7 @@ class Tokenizer(Preprocessor):
         # initialize Tokenizer
         self.tokenizer = TweetTokenizer(preserve_case=False, reduce_len=True, strip_handles=True)
         # initiailze superclass
-        super().__init__([COLUMN_PUNCTUATION], TWEET_TOKENIZED)
+        super().__init__([input_column], output_column)
         
     def _get_values(self, inputs):
         """
