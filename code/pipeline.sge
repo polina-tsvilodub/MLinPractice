@@ -13,10 +13,12 @@ conda activate MLinPractice
 
 
 echo "loading data"
-code/load_data.sge
+code/load_data.sh
 echo "preprocessing"
-code/preprocessing.sge
+code/preprocessing.sh
 echo "feature extraction"
-code/feature_extraction.sge
+code/feature_extraction.sh
 echo "classification"
-code/classification.sge
+code/classification.sh
+
+conda deactivate
