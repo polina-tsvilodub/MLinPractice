@@ -5,6 +5,11 @@
 #$ -pe default 2
 #$ -o $HOME
 #$ -e $HOME
+#$ -l h=*cippy*
+
+export PATH="$HOME/miniconda/bin:$PATH"
+eval "$(conda shell.bash hook)"
+conda activate MLinPractice
 
 # create directory if not yet existing
 mkdir -p data/classification/
@@ -19,3 +24,4 @@ echo "  validation set"
 python -m code.classification.run_classifier data/feature_extraction/validation.pickle -i data/classification/classifier.pickle --label_based --svm_classifier
 
 # don't touch the test set, yet, because that would ruin the final generalization experiment!
+conda deactivate MLinPractice
