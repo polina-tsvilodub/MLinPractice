@@ -8,9 +8,6 @@ Created on Sat Oct  9 12:00:44 2021
 
 from code.preprocessing.preprocessor import Preprocessor
 from code.util import TWEET_TOKENIZED, COLUMN_STOPWORDS
-from nltk.corpus import stopwords
-import nltk
-nltk.download('stopwords')
 
 
 class StopwordRemover(Preprocessor):
@@ -36,9 +33,13 @@ class StopwordRemover(Preprocessor):
             Tokenized tweets without stopwords.
 
         """
+        # for runtime reasons of the grid, we create a little cutsom stopwords list
+        # based off of the nltk stopwords for English which can be found under
+        # www.nltk.org/book/ch02.html
+        custom_stopwords = ['the', 'a', 'an', 'and', 'in', 'of', 'to', 'is', 'are']
         tweets_no_stopwords = []
         for tweet in inputs[0]:
-            tweet_no_stopwords = [word for word in tweet if not word in stopwords.words()]
+            tweet_no_stopwords = [word for word in tweet if not word in custom_stopwords]
             tweets_no_stopwords.append(tweet_no_stopwords)
         
         return tweets_no_stopwords

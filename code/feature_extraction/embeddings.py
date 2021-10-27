@@ -52,10 +52,16 @@ class Embeddings(FeatureExtractor):
         # iterate over sentences
         for sent in inputs[0]:
             # compute word embeddings of each sentence as a list
-            # while filtering out OOV tokens
+
+            for word in sent:
+                sent_list = []
+                # while filtering out OOV tokens
+                try:
+                    sent_list.append(self._glove_vecs[word])
+                except KeyError:
+                    continue
             # then compute average over all embedded words to get sentence-level embedding (25-dimensional)
-            sent_embeddings.append(np.array([self._glove_vecs[word] for word in sent if self._glove_vecs.has_index_for(word)]).mean(axis=0))
-            
+            sent_embeddings.append(np.array(sent_list).mean(axis=0))    
         # transform to numpy array
         sent_embeddings_arr = np.array(sent_embeddings)
         

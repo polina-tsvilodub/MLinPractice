@@ -14,8 +14,10 @@ conda activate MLinPractice
 
 echo "loading data"
 code/load_data.sh
-echo "preprocessing"
-code/preprocessing.sh
+echo "preprocessing tokenization"
+code/preprocessing_tokenize.sh
+echo "preprocessing stopwords"
+code/preprocessing_stopwords.sh
 echo "feature extraction"
 code/feature_extraction.sh
 echo "classification"

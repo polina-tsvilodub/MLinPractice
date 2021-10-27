@@ -55,9 +55,9 @@ else:   # manually set up a classifier
         classifier_svm = SVC()
         # cross-validation with grid search
         # dict of hyperparameters to optimize
-        parameters = {"kernel": ("linear", "rbf", "poly"), 
+        parameters = {"kernel": ("linear", "rbf"), 
                       "gamma": ("scale", "auto"),
-                      "C": [1, 10]}
+                      "C": [1, 5]}
         svm_clf = GridSearchCV(
             estimator=classifier_svm, 
             param_grid=parameters, 
