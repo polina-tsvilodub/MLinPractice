@@ -42,6 +42,7 @@ if args.stopwords:
     
 # call all preprocessing steps
 for preprocessor in preprocessors:
+    print(preprocessor._output_column)
     df = preprocessor.fit_transform(df)
 
 # store the results
