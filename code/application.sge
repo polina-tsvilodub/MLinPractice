@@ -13,4 +13,4 @@ conda activate MLinPractice
 
 # execute the application with all necessary pickle files
 echo "Starting the application..."
-python -m ..code.application.application ../data/preprocessing/pipeline_tokenized.pickle ../data/preprocessing/pipeline_stopwords.pickle ../data/feature_extraction/pipeline.pickle ../data/classification/classifier.pickle
+python -m code.application.application data/preprocessing/pipeline_tokenized.pickle data/preprocessing/pipeline_stopwords.pickle data/feature_extraction/pipeline.pickle data/classification/classifier.pickle
