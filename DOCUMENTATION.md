@@ -21,6 +21,20 @@ The four major pipeline steps are:
 * Classifier evaluation 
 
 For each step, we document the specific modules executing the step; for each module, its motivation and implementation are described.
+Finally, we describe and discuss our results.
+
+## General set-up instructions
+
+The overall execution flow is briefly described as an introduction, before going into details of the single modules. 
+
+Each major module is implemented in a separate directory. In each directory, there is a .sge script created for running the pipeline on the IKW computing grid. An analogous .sh script for running the pipeline locally can be found in the code directory. 
+The options of the pipeline steps are implemented as command line arguments and are, therefore, passed in the .sge scripts. This allows to flexibly adapt the pipeline components. 
+
+Due to runtime constraints provided by the IKW grid, we created two separate preprocessing job scripts (see below for details). Due to the same reason we created three separate feature extraction job scripts (one per training, validation and test set, respectively).  
+
+Ideally, one could start the entire pipeline from the code/pipeline.sh script, but this is not recommended for the grid due to the runtime. The user is advised to submit one job per module .sge script. 
+
+Finally, in order to make predictions with the final trained classifier one can use the script code/application.sh which allows ti interactively enter tweets and receive virality predictions for them.
 
 
 ## Preprocessing steps
@@ -28,6 +42,11 @@ For each step, we document the specific modules executing the step; for each mod
 First, the input data is preprocsessed. This is a standard first step of machine learning pipelines aiming to massage data into the required shape and maximally improve its quality by removing noise.
 The specific measures to do so depend on the nature of the data. Since our input data consists of tweets (i.e., texts) and their meta information, we focus on common text preprocessing techniques.
 All preprocessing steps are implemented in `code/preprocessing`. 
+
+### Label creation
+
+Before preprocessing, labels are added to the data according to the assumed operationalization of virality. That is, a new binary column "labels" is created which contains a 1 if the sum of the entries from the columns "likes_count" and "retweets_count" is above 50. 
+The script code/preprocessing/create_labels.py is also called from code/preprocessing/preprocessing_tokenize.sge .
 
 ### Punctuation, emoji and special charcaters removal
 
@@ -50,6 +69,7 @@ The subclass implements the following method(s):
 ### Tokenization
 
 In this step, text strings are split into smaller units. We decided to implement word-level tokenization, i.e., tweet strings are split into single words. This was done to allow removing single tokens like stop words (see below).
+This and the previous step are initialized in code/preprocessing/preprocessing_tokenize.sge .
 
 **Motivation**
 
@@ -67,7 +87,7 @@ The sublcass implements the method `_get_values()` which tokenizes a list of str
 
 ### Stopword Removal
 
-In this step, specific tokens are removed from tokenized sentences. While it is possible to create custom lists of stopwords, we deem off-the-shelf stopwords lists sufficient for our task.
+In this step, specific tokens are removed from tokenized sentences. We create a custom lists of nine stopwords which we deem most frequent. We do not use off-the-shelf stopwords lists because iterating over them requires too much runtime. This step is initialized in code/preprocessing/preprocessing_stopwords.sge .
 
 **Motivation**
 
@@ -80,10 +100,10 @@ The stopword removal takes place after the tweet was already tokenized. We used 
 The stopword remover is implemented in `code/preprocessing/stopword_remover.py` that contains the class `StopwordRemover` which is a subclass of `Preprocessor`.
 The subclass implements the method `_get_values()` which removes the stopwords from the already tokenized tweets (list of lists of strings) and outputs the resulting tweets containing no stopwords (list of lists of strings).
 
-
-### Label creation
 ### Data splits
-  
+
+Finally, the preprocessed dataset is split into training, validation and test datasets according to a 60 : 20 : 20 split (which can be customized9. This is implemented in code/preprocessing/split_data.py.   
+Features required for the classifier are then extracted separately for each dataset split.   
   
 ## Feature Extraction
 Below, we document the features we extract and feed into our classifier. The selection of these features is based on the list brainstormed during the respective seminar session, as well as on our general knowledge of useful features in classification tasks.
