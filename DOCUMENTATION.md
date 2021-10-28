@@ -8,7 +8,7 @@ Created on Wed Oct  6 05:33:00 2021
 
 # Documentation of the Tweets-Going-Viral Project by group *Ultimate Power Touple 00101010*
 
-This project is conducted in the scope of the block seminar "Machine learning in practice" at the Osnabrück University in WS2021/22. 
+This project is conducted as part of the block seminar "Machine learning in practice" at the Osnabrück University in WS2021/22. 
 The goal of this project is to implement a classifier predicting whether a tweet containing either of the keywords "data analysis", "data science" or "data visualization" will go viral. To this end, the notion of going viral is operationalized as a tweet having a total of more than 50 likeas and retweets in sum. 
 Furthermore, the goal of this project is to develop the classifier in a team while adhering to industrial best practices of agile software engineering and data science. 
 
@@ -32,9 +32,9 @@ The options of the pipeline steps are implemented as command line arguments and 
 
 Due to runtime constraints provided by the IKW grid, we created two separate preprocessing job scripts (see below for details). Due to the same reason we created three separate feature extraction job scripts (one per training, validation and test set, respectively).  
 
-Ideally, one could start the entire pipeline from the code/pipeline.sh script, but this is not recommended for the grid due to the runtime. The user is advised to submit one job per module `.sge` script. 
+Ideally, one could start the entire pipeline from the `code/pipeline.sge` (or .sh) script, but this is not recommended for the grid due to long runtime. The user is advised to submit one job per module `.sge` script. 
 
-Finally, in order to make predictions with the final trained classifier one can use the script code/application.sh which allows ti interactively enter tweets and receive virality predictions for them.
+Finally, in order to make predictions with the final trained classifier one can use the script `code/application.sge` (.sh) which allows to interactively enter tweets and receive virality predictions for them.
 
 
 ## Preprocessing steps
@@ -45,8 +45,8 @@ All preprocessing steps are implemented in `code/preprocessing`.
 
 ### Label creation
 
-Before preprocessing, labels are added to the data according to the assumed operationalization of virality. That is, a new binary column "labels" is created which contains a 1 if the sum of the entries from the columns "likes_count" and "retweets_count" is above 50. 
-The script `code/preprocessing/create_labels.py` is also called from `code/preprocessing/preprocessing_tokenize.sge`.
+Before preprocessing, labels are added to the data according to the assumed operationalization of virality. That is, a new binary column "label" is created which contains the boolean TRUE if the sum of the entries from the columns "likes_count" and "retweets_count" is above 50, and FALSE otherwise. 
+The script `code/preprocessing/create_labels.py` is called from `code/preprocessing/preprocessing_tokenize.sge`.
 
 ### Punctuation, emoji and special charcaters removal
 
@@ -64,30 +64,34 @@ In `code/preprocessing` we implement `punctuation_remover.py` which contains the
 The subclass implements the following method(s):
 * `_set_variables(self, inputs):` Set punctuation in `self._punctuation` that will be removed by the `_get_values`method.  
 * `deEmojify(text):` Removes unicode encoded emojis from a string. 
-* `_get_values(self, inputs):` Remove punctuation, emojis and special characters from the input column containing a list of sentence strings. Outputs a column containing a list of clean sentence strings.  
+* `_get_values(self, inputs):` Remove punctuation, emojis and special characters from the input column containing a list of sentence strings. 
+  
+  Returns a column containing a list of clean sentence strings.  
 
 ### Tokenization
 
 In this step, text strings are split into smaller units. We decided to implement word-level tokenization, i.e., tweet strings are split into single words. This was done to allow removing single tokens like stop words (see below).
-This and the previous step are initialized in `code/preprocessing/preprocessing_tokenize.sge`.
+This and the previous steps are initialized in `code/preprocessing/preprocessing_tokenize.sge`.
 
 **Motivation**
 
 We decided to use a tokenizer during preprocessing since this is an essential step in making text machine interpretable.
 The specific tokenizer we used is the `nltk TweetTokenizer`; it is a tokenizer specifically designed for tokenizing tweets which is the domain of this task.
+
+**Implementantion**
+
+The tokenizer is implementned in `code/preprocessing/tokenizer.py` which contains the class `Tokenizer`. It is a sublcass of the `Preprocessor` class.
+The sublcass implements the method `_get_values()` which tokenizes a list of strings.
 We implemented the tokenizer with the following parameters:
 - `preserve_case=False`: downcases all characters except for emoticons, saves us from implementing lowercasing separately.
 - `reduce_len=True`: limits repeating sequences to length of 3.
 - `strip_handles=True`: strips handles (@ mentions) from tweets as they are already documented in a separate column of the dataset.
 
-**Implementantion**
-
-The tokenizer is implementned in `code/preprocessing/tokenizer.py` which contains the class `Tokenizer`. It is a sublcass of the `Preprocessor` class.
-The sublcass implements the method `_get_values()` which tokenizes a list of strings and outputs a list of lists of strings containing the tokenized tweets.
+  Returns a list of lists of strings containing the tokenized tweets
 
 ### Stopword Removal
 
-In this step, specific tokens are removed from tokenized sentences. We create a custom lists of nine stopwords which we deem most frequent. We do not use off-the-shelf stopwords lists because iterating over them requires too much runtime. This step is initialized in `code/preprocessing/preprocessing_stopwords.sge`.
+In this step, specific tokens are removed from tokenized sentences. We create a custom lists of nine stopwords which we deem most frequent, based on nltk's `corpus` of stopwords. We do not use off-the-shelf stopwords lists because iterating over them yields too long runtimes. This step is initialized in `code/preprocessing/preprocessing_stopwords.sge`.
 
 **Motivation**
 
@@ -96,13 +100,15 @@ Therefore, we decided to remove them during the preprocessing procedure to yield
 
 **Implementation**
 
-The stopword removal takes place after the tweet was already tokenized. We used the list of stopwords from nltk's `corpus` to decide which words are classified as stopwords.
+The stopword removal takes place after the tweet was already tokenized. 
 The stopword remover is implemented in `code/preprocessing/stopword_remover.py` that contains the class `StopwordRemover` which is a subclass of `Preprocessor`.
-The subclass implements the method `_get_values()` which removes the stopwords from the already tokenized tweets (list of lists of strings) and outputs the resulting tweets containing no stopwords (list of lists of strings).
+The subclass implements the method `_get_values()` which removes the stopwords from the already tokenized tweets (list of lists of strings).
+
+Returns the resulting tweets containing no stopwords (list of lists of strings).
 
 ### Data splits
 
-Finally, the preprocessed dataset is split into training, validation and test datasets according to a 60 : 20 : 20 split (which can be customized9. This is implemented in `code/preprocessing/split_data.py`.   
+Finally, the preprocessed dataset is split into training, validation and test datasets according to a 60 : 20 : 20 split (which can be customized). This is implemented in `code/preprocessing/split_data.py`.   
 Features required for the classifier are then extracted separately for each dataset split.   
   
 ## Feature Extraction
@@ -126,6 +132,8 @@ This feature was specifically design for indicating the presence of media or lin
 The binary feature eextractor is implemented in the class `BinaryFeatureExtractor` which is located in `code/feature_extraction/binary_features.py` and is a subclass of `FeatureExtractor`.
 The class implements the method `_get_values()` which extracts the binary features from the given column of the dataset.
 
+Returns a column of one-hot encoded binary numpy arrays.
+
 ### Numerical Feature Extraction
 
 A numerical feature represents a continuous value of some variable. 
@@ -133,15 +141,17 @@ A numerical feature represents a continuous value of some variable.
 **Motivation**
 
 Some aspects of a tweet are encoded separately from the tweet in the dataset, e.g., the hashtags and @ mentions. 
-Since it is not necessarily interesting who or which hashtag was mentioned but how many, it is of interest to compute the number of hashtags or the number of @ mentions. 
+Since it is not necessarily interesting who or which hashtag was mentioned but how many are present, it is of interest to compute the number of hashtags or the number of @ mentions. 
 Therefore, we implement a feature extractor that computes these features. 
 The features are all represented as lists in the dataset. 
-Therefore, the length of the list is the number of hashtags or @ mentions.
+That is, the length of the list is the number of hashtags or @ mentions.
 
 **Implementation**
 
-The numerical feature extractor is implemented in the calss `NumericalFeatureExtractor` which is located in `code/feature_extraction/numerical_featuers.py`.
+The numerical feature extractor is implemented in the class `NumericalFeatureExtractor` which is located in `code/feature_extraction/numerical_featuers.py`.
 The class implements the method `_get_values()` which extracts the length of each nested list returning a list of integer. 
+
+Returns a list of integers.
 
 ### Datetime Extraction
 
@@ -152,13 +162,15 @@ This feature parses the date and time information into a machine readable format
 Date and time of the publication of a tweet can influence its virality immensely. Therefore, we decided to use the publication datetime provided in the dataset as a feature.
 However, the date and time as provided are not interpretable for a machine learning algorithm, so they need to be converted into numerical values.
 We decided to encode the month (1-12), the day of the month (1-31), the hour (0-23) and the minutes (0-59) of a tweet's publication. The year was discarded due to not being a suitable predictive feature.
-The year of the publication won't repeat and our classifier should be able to generalize to tweet's in the future.
+The year of the publication won't repeat and our classifier should be able to generalize to tweets in the future.
 
 **Implementation**
 
 The date and time extraction are implemented separately in the classes `DateExtractor` and `TimeExtractor`, respectively.
 The classes are both located in the same file `code/feature_extraction/datetime_extractor.py`. 
 Both are a subclass of `FeatureExtractor` and implement the method `_get_values()` which extracts the desired date and time features as integers.
+
+Return lists of integers, respectively.
 
 ### Text embeddings
 
@@ -172,6 +184,7 @@ But, more importantly, the `gensim` GloVe emebddings were created using a Twitte
 The decision how to compute tweet-level embeddings from token-level embeddings is driven by manageability and tractability reasons; we are aware that in more advanced embedding techniques out-of-vocabulary words usually receive a dedicated token (see below).
 
 **Implementation**
+
 In `code/feature_extraction`, we implement `embeddings.py` which implements the `Embeddings` class, a subclass of `FeatureExtractor`. The subclass implements the following methods:
   *`_set_variables(self, inputs)`: Sets internal variable given input columns. Downloads GloVe embeddings, if not downloaded yet, pretrained on the `'glove-twitter-25'` dataset.
   * `_get_values(self, inputs)`: Computes tweet-level embeddings. This is done by extracting word-level embeddings (if `KeyError` raised, the words are just skipped). Then, tweet-level embeddings are computed as average of word-level embeddings for a given input column.
@@ -181,12 +194,14 @@ In `code/feature_extraction`, we implement `embeddings.py` which implements the 
 ## Classification
 
 The classifier is the core of our application, since it completes the actal task of predicting whether a tweet goes viral, given its feature values. There are quite many approaches and architectures for classification, and the choice of a particular type is usually motivated by the nature of the data and the task.
-
+All classifier related modules are implemented in `code/classification`.
+                                                                                                                          
 **Motivation**
 
 Given that our task involves binary classification, several classifier types like logistic regression, neural networks or support vector machines (SVM) were in question. We decided to use an SVM as our final classifier architecture due to the following reasons:
     * training a neral network might require even more data and is computationally quite expensive. Furthermore, optimizing the architecture of the network itself goes beyond the scope of such a project and might be an overkill for the task.
     * logistic regression is limited in that it only makes use of a linear combination of the features in logit space. This linearity assumption might be too strong when dealing with textual data.
+    * random forest classifiers are not well-suited for data containing continuous features.
     * given general experience, an SVM is usually a good choice for a basic but robust classifier. It is computationally easier and might use a non-linear projection kernel, such that it might be better suitable for higher-dimensional data. From personal experience, it also performs reasonably well on textual data.
 
 Last but not least, sklearn also provides an simple API for using SVMs. For training the SVM, we chose to use sklearn's `GridSearchCV` method. 
