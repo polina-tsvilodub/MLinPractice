@@ -66,24 +66,30 @@ else:   # manually set up a classifier
             )
         # call grid search and CV
         svm_clf.fit(data["features"], data["labels"])
-        # TODO write out all results ?
+      
         # get best classifier
         svm_best = svm_clf.best_estimator_
         print('     Best SVM classifier parameters: ', svm_best)
         
+        # now classify the given data with best classifier instance
+        prediction_svm = svm_best.predict(data["features"])
+
+        # set up evaluator class instance for crossvalidation results of the SVM
+        evaluator_cv = EvaluationMetrics(y_true=data["labels"], y_pred=prediction_svm) 
+        print("     Evaluation metrics of best SVM classifier:")
+        evaluator_cv.compute_metrics()
+        # export crossvalidation evaluation results to default or provided location as csv
+        if args.cv_export is not None:
+            with open(args.cv_export, 'a') as cv_out:
+                evaluator_cv._results.to_csv(cv_out)
+        
+        # export the trained classifier if the user wants us to do so
+        if args.export_file is not None:
+            with open(args.export_file, 'wb') as f_out:
+                pickle.dump(svm_best, f_out)
+        
 # classify data with the given train data with baseline dummy classifier
 prediction_dummy = classifier.predict(data["features"])     
-# now classify the given data with best classifier instance
-prediction_svm = svm_best.predict(data["features"])
-
-# set up evaluator class instance for crossvalidation results of the SVM
-evaluator_cv = EvaluationMetrics(y_true=data["labels"], y_pred=prediction_svm) 
-print("     Evaluation metrics of best SVM classifier:")
-evaluator_cv.compute_metrics()
-# export crossvalidation evaluation results to default or provided location as csv
-if args.cv_export is not None:
-    with open(args.cv_export, 'a') as cv_out:
-        evaluator_cv._results.to_csv(cv_out)
         
 # set up another evaluator instance for the dummy classifier
 evaluator_dummy_classifier = EvaluationMetrics(y_true=data["labels"], y_pred=prediction_dummy)
@@ -93,8 +99,3 @@ evaluator_dummy_classifier.compute_metrics()
 if args.dummy_classifier_export is not None:
     with open(args.dummy_classifier_export, 'a') as cv_out:
         evaluator_dummy_classifier._results.to_csv(cv_out)
-
-# export the trained classifier if the user wants us to do so
-if args.export_file is not None:
-    with open(args.export_file, 'wb') as f_out:
-        pickle.dump(svm_best, f_out)
