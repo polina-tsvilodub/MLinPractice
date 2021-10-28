@@ -32,16 +32,16 @@ class TestBinaryExtractor(unittest.TestCase):
         self.assertEqual(df_output[0], output)
     
     def test_two_features(self):
-        photo_input = ["photo 1", "photo 2"]
-        video_input = 0
-        output = 1
+        photo_input = [["photo 1", "photo 2"], []]
+        video_input = [0, 1]
+        output = [1,1]
         
         df = pd.DataFrame()
-        df[self.INPUT_COLUMNS[0]] = [photo_input]
-        df[self.INPUT_COLUMNS[1]] = [video_input]
-        
-        df_output = self.multiple_input_extractor.fit_transform(df)
-        self.assertEqual(df_output[0], output)
+        df[self.INPUT_COLUMNS[0]] = photo_input
+        df[self.INPUT_COLUMNS[1]] = video_input
+        self.multiple_input_extractor.fit(df)
+        df_output = self.multiple_input_extractor.transform(df)
+        self.assertListEqual(df_output.tolist(), output)
 
 if __name__ == '__main__':
     unittest.main()

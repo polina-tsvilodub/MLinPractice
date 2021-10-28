@@ -29,7 +29,8 @@ COLUMN_PUNCTUATION = "tweet_no_punctuation"
 COLUMN_STOPWORDS = "tweet_no_stopwords"
 # default column of tokenized tweets
 TWEET_TOKENIZED = "tweet_tokenized"
-COLUMN_MEDIA = "media"
+COLUMN_PHOTO_PRESENT = "photo_present"
+COLUMN_VIDEO_PRESENT = "video_present"
 COLUMN_URL_PRESENT = "urls_present"
 
 # default column names for evaluation

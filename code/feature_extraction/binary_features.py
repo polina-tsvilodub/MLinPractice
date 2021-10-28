@@ -17,20 +17,14 @@ class BinaryFeatureExtractor(FeatureExtractor):
     
     def _get_values(self, inputs):
         result = []
-        # only process feature if it's a list
-        # one feature called media present is combined from two columns in the dataset 
-        # it is combined from the columns photos and video
-        if "photos" in self.input_columns:
-            # column photos comes as a list of json objects
-            # column video comes as a boolean number indicating presence (1) or absence (0) of video
-            for tmp in inputs[0]:
-                # this expression returns 1 if there is media persent (if list of photos bigger than 0
-                # and/or if video == 1) and 0 if media is absent (list of photos == 0 and video == 0)
-                result.append(int(len(tmp[0]) > 0 or bool(tmp[1])))
+        # compute binary that shows whether a feature is absent (0) or present (1)
+        if self.input_columns == "video":
+            for item in inputs[0]:
+                result.append(item)
         else:
-            # this feature is not a combined feature, it rather shows the absence (0) or presence (1) of it
-            for link in inputs[0]:
+            for item in inputs[0]:
                 # the feature is present if the list is bigger than 0 and absent if it is 0
-                result.append(int(len(link)>0))
+                result.append(int(len(item)>0))
         result = np.array(result)
+        result = result.reshape(-1, 1)
         return result

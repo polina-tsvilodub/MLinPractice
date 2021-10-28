@@ -21,16 +21,18 @@ class FeatureCollector(FeatureExtractor):
         self._features = features
         
         # collect input columns
+        # some extractors use multiple columns therefore we may have to flatten the output of get_input_columns()
         input_columns = []
         for feature in self._features:
             tmp = feature.get_input_columns()
-            if type(tmp) == "list":
-                for item in tmp:
+            # if first entry of tmp (which are the returned input columns) is a list flatten it by append the columns one by one to input_columns
+            if type(tmp[0]) == list:
+                for item in tmp[0]:
                     input_columns.append(item)
+            # if first entry is not a list (therefore only a string) append it to input_columns
             else:
                 input_columns += tmp
                 
-        
         # remove duplicate columns
         input_colums = list(set(input_columns))
         
@@ -50,7 +52,9 @@ class FeatureCollector(FeatureExtractor):
         all_feature_values = []
         
         for feature in self._features:
-            all_feature_values.append(feature.transform(df))
+            tmp = feature.transform(df)
+            print(feature.get_input_columns(), tmp.shape)
+            all_feature_values.append(tmp)
         
         result = np.concatenate(all_feature_values, axis = 1)
         return result

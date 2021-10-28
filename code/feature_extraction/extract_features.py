@@ -17,7 +17,7 @@ from code.feature_extraction.feature_collector import FeatureCollector
 from code.feature_extraction.binary_features import BinaryFeatureExtractor
 from code.feature_extraction.numerical_features import NumericalFeatureExtractor
 from code.feature_extraction.datetime_extractor import DateExtractor, TimeExtractor
-from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_DATE, COLUMN_TIME, COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTO, COLUMN_VIDEO, COLUMN_URL, TWEET_TOKENIZED, COLUMN_HASHTAG, EMBEDDING_INPUT, COLUMN_MEDIA, COLUMN_URL_PRESENT
+from code.util import COLUMN_TWEET, COLUMN_LABEL, COLUMN_DATE, COLUMN_TIME, COLUMN_HASHTAGS, COLUMN_MENTIONS, COLUMN_PHOTO,COLUMN_PHOTO_PRESENT, COLUMN_VIDEO, COLUMN_VIDEO_PRESENT, COLUMN_URL, TWEET_TOKENIZED, COLUMN_HASHTAG, EMBEDDING_INPUT, COLUMN_URL_PRESENT
 
 
 
@@ -55,7 +55,8 @@ else:    # need to create FeatureCollector manually
         features.append(Embeddings(EMBEDDING_INPUT))
     
     if args.binary:
-        features.append(BinaryFeatureExtractor([COLUMN_PHOTO, COLUMN_VIDEO], COLUMN_MEDIA))
+        features.append(BinaryFeatureExtractor(COLUMN_PHOTO, COLUMN_PHOTO_PRESENT))
+        features.append(BinaryFeatureExtractor(COLUMN_VIDEO, COLUMN_VIDEO_PRESENT))
         features.append(BinaryFeatureExtractor(COLUMN_URL, COLUMN_URL_PRESENT))
 
     if args.hashtags:

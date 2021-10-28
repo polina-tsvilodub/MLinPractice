@@ -34,4 +34,5 @@ class NumericalFeatureExtractor(FeatureExtractor):
         for item in inputs[0]:
             result.append(len(item))
         result = np.array(result)
+        result = result.reshape(-1, 1)
         return result
