@@ -56,6 +56,7 @@ else:   # manually set up a classifier
         # cross-validation with grid search
         # dict of hyperparameters to optimize
         parameters = {"penalty": ("l1", "l2"), 
+                      "dual": [False],
                       "C": [1, 2]}
         svm_clf = GridSearchCV(
             estimator=classifier_svm, 
