@@ -55,25 +55,24 @@ else:   # manually set up a classifier
         classifier_svm = LinearSVC()
         # cross-validation with grid search
         # dict of hyperparameters to optimize
-#         parameters = {"kernel": ("linear", "rbf"), 
-#                       "gamma": ("scale", "auto"),
-#                       "C": [1, 5]}
-#         svm_clf = GridSearchCV(
-#             estimator=classifier_svm, 
-#             param_grid=parameters, 
-#             refit=True, 
-#             cv=args.svm_k 
-#             )
+        parameters = {"penalty": ("l1", "l2"), 
+                      "C": [1, 2]}
+        svm_clf = GridSearchCV(
+            estimator=classifier_svm, 
+            param_grid=parameters, 
+            refit=True, 
+            cv=args.svm_k 
+            )
         # call grid search and CV
-#         svm_clf.fit(data["features"], data["labels"])
+        svm_clf.fit(data["features"], data["labels"])
         # fit classifier
-        classifier_svm.fit(data["features"], data["labels"])
+        #classifier_svm.fit(data["features"], data["labels"])
         # get best classifier
-#         svm_best = svm_clf.best_estimator_
-#         print('     Best SVM classifier parameters: ', svm_best)
+        svm_best = svm_clf.best_estimator_
+        print('     Best SVM classifier parameters: ', svm_best)
         
         # now classify the given data with best classifier instance
-        prediction_svm = classifier_svm.predict(data["features"])
+        prediction_svm = svm_best.predict(data["features"])
 
         # set up evaluator class instance for crossvalidation results of the SVM
         evaluator_cv = EvaluationMetrics(y_true=data["labels"], y_pred=prediction_svm) 
@@ -87,7 +86,7 @@ else:   # manually set up a classifier
         # export the trained classifier if the user wants us to do so
         if args.export_file is not None:
             with open(args.export_file, 'wb') as f_out:
-                pickle.dump(classifier_svm, f_out)
+                pickle.dump(svm_best, f_out)
         
 # classify data with the given train data with baseline dummy classifier
 prediction_dummy = classifier.predict(data["features"])     
