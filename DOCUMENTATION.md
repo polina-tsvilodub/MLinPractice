@@ -27,12 +27,12 @@ Finally, we describe and discuss our results.
 
 The overall execution flow is briefly described as an introduction, before going into details of the single modules. 
 
-Each major module is implemented in a separate directory. In each directory, there is a .sge script created for running the pipeline on the IKW computing grid. An analogous .sh script for running the pipeline locally can be found in the code directory. 
-The options of the pipeline steps are implemented as command line arguments and are, therefore, passed in the .sge scripts. This allows to flexibly adapt the pipeline components. 
+Each major module is implemented in a separate directory. In each directory, there is a `.sge` script created for running the pipeline on the IKW computing grid. An analogous `.sh` script for running the pipeline locally can be found in the code directory. 
+The options of the pipeline steps are implemented as command line arguments and are, therefore, passed in the `.sge` scripts. This allows to flexibly adapt the pipeline components. 
 
 Due to runtime constraints provided by the IKW grid, we created two separate preprocessing job scripts (see below for details). Due to the same reason we created three separate feature extraction job scripts (one per training, validation and test set, respectively).  
 
-Ideally, one could start the entire pipeline from the code/pipeline.sh script, but this is not recommended for the grid due to the runtime. The user is advised to submit one job per module .sge script. 
+Ideally, one could start the entire pipeline from the code/pipeline.sh script, but this is not recommended for the grid due to the runtime. The user is advised to submit one job per module `.sge` script. 
 
 Finally, in order to make predictions with the final trained classifier one can use the script code/application.sh which allows ti interactively enter tweets and receive virality predictions for them.
 
@@ -46,7 +46,7 @@ All preprocessing steps are implemented in `code/preprocessing`.
 ### Label creation
 
 Before preprocessing, labels are added to the data according to the assumed operationalization of virality. That is, a new binary column "labels" is created which contains a 1 if the sum of the entries from the columns "likes_count" and "retweets_count" is above 50. 
-The script code/preprocessing/create_labels.py is also called from code/preprocessing/preprocessing_tokenize.sge .
+The script `code/preprocessing/create_labels.py` is also called from `code/preprocessing/preprocessing_tokenize.sge`.
 
 ### Punctuation, emoji and special charcaters removal
 
@@ -69,7 +69,7 @@ The subclass implements the following method(s):
 ### Tokenization
 
 In this step, text strings are split into smaller units. We decided to implement word-level tokenization, i.e., tweet strings are split into single words. This was done to allow removing single tokens like stop words (see below).
-This and the previous step are initialized in code/preprocessing/preprocessing_tokenize.sge .
+This and the previous step are initialized in `code/preprocessing/preprocessing_tokenize.sge`.
 
 **Motivation**
 
@@ -87,7 +87,7 @@ The sublcass implements the method `_get_values()` which tokenizes a list of str
 
 ### Stopword Removal
 
-In this step, specific tokens are removed from tokenized sentences. We create a custom lists of nine stopwords which we deem most frequent. We do not use off-the-shelf stopwords lists because iterating over them requires too much runtime. This step is initialized in code/preprocessing/preprocessing_stopwords.sge .
+In this step, specific tokens are removed from tokenized sentences. We create a custom lists of nine stopwords which we deem most frequent. We do not use off-the-shelf stopwords lists because iterating over them requires too much runtime. This step is initialized in `code/preprocessing/preprocessing_stopwords.sge`.
 
 **Motivation**
 
@@ -102,7 +102,7 @@ The subclass implements the method `_get_values()` which removes the stopwords f
 
 ### Data splits
 
-Finally, the preprocessed dataset is split into training, validation and test datasets according to a 60 : 20 : 20 split (which can be customized9. This is implemented in code/preprocessing/split_data.py.   
+Finally, the preprocessed dataset is split into training, validation and test datasets according to a 60 : 20 : 20 split (which can be customized9. This is implemented in `code/preprocessing/split_data.py`.   
 Features required for the classifier are then extracted separately for each dataset split.   
   
 ## Feature Extraction
@@ -189,17 +189,17 @@ Given that our task involves binary classification, several classifier types lik
     * logistic regression is limited in that it only makes use of a linear combination of the features in logit space. This linearity assumption might be too strong when dealing with textual data.
     * given general experience, an SVM is usually a good choice for a basic but robust classifier. It is computationally easier and might use a non-linear projection kernel, such that it might be better suitable for higher-dimensional data. From personal experience, it also performs reasonably well on textual data.
 
-Last but not least, sklearn also provides an simple API for using SVMs. For training the SVM, we chose to use sklearn's GridSearchCV method. 
+Last but not least, sklearn also provides an simple API for using SVMs. For training the SVM, we chose to use sklearn's `GridSearchCV` method. 
 We decided to use 5-fold cross validation for training the classifier in order to maximally make use of our data (see "Evaluation schema" below). 
 The classifier with the best-performing hyperparameters which is refit on the entire training dataset is then used for the downstream steps.
 
 **Implementation**
 
-The classifier is implemented in code/classification/run_classifier.py. The file implements two classifiers:
-    * the main SVM classifier as an instance of sklearn.svm.SVC
-    * the baseline dummy classifier as an instance of sklearn.dummy.DummyClassifier (see below)
+The classifier is implemented in `code/classification/run_classifier.py`. The file implements two classifiers:
+    * the main SVM classifier as an instance of `sklearn.svm.SVC`
+    * the baseline dummy classifier as an instance of `sklearn.dummy.DummyClassifier` (see below)
     * the computation of an evaluation metrics suite for each of the classifiers (see below)
-        * evaluation results are stored in .csv files in the results/ directory. 
+        * evaluation results are stored in `.csv` files in the `results/` directory. 
 
 ## Evaluation Metrics
 
@@ -257,10 +257,10 @@ Using this dummy classifier we also want to test whether "fancy" features are ne
 
 **Implementation**
 
-The dummy classifier is also implemented in code/classification/run_classifier.py:
-    * the baseline dummy classifier is an instance of sklearn.dummy.DummyClassifier (see below)
+The dummy classifier is also implemented in `code/classification/run_classifier.py`:
+    * the baseline dummy classifier is an instance of `sklearn.dummy.DummyClassifier`
     * the evaluation metrics suite is computed for the baseline  
-        * evaluation results are stored in .csv files in the results/ directory. 
+        * evaluation results are stored in `.csv` files in the `results/` directory 
 
 
 ## Results & Discussion 
