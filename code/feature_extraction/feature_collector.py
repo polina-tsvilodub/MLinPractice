@@ -24,8 +24,8 @@ class FeatureCollector(FeatureExtractor):
         input_columns = []
         for feature in self._features:
             tmp = feature.get_input_columns()
-            if type(temp) = "list":
-                for item in temp:
+            if type(tmp) == "list":
+                for item in tmp:
                     input_columns.append(item)
             else:
                 input_columns += tmp
