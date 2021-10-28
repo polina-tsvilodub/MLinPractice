@@ -23,7 +23,13 @@ class FeatureCollector(FeatureExtractor):
         # collect input columns
         input_columns = []
         for feature in self._features:
-            input_columns += feature.get_input_columns()
+            tmp = feature.get_input_columns()
+            if type(temp) = "list":
+                for item in temp:
+                    input_columns.append(item)
+            else:
+                input_columns += tmp
+                
         
         # remove duplicate columns
         input_colums = list(set(input_columns))
