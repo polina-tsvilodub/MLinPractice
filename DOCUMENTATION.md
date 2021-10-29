@@ -269,6 +269,8 @@ In `code/classification/run_classifier.py`, the evaluation schema is implemented
 * the final classifier is accessed and dumped via the method's attribute `best_estimator_`.
     * the evaluation metrics described above are computed on this best performing fitted production classifier.
     
+    Returns the best performing trained sklearn classifier instance.
+                                                          
 ## Evaluation Baseline
 
 **Motivation**
@@ -285,7 +287,40 @@ The dummy classifier is also implemented in `code/classification/run_classifier.
     * the evaluation metrics suite is computed for the baseline  
         * evaluation results are stored in `.csv` files in the `results/` directory 
 
-
+Returns a trained sklearn classifier instance.
+                                                          
 ## Results & Discussion 
 
-???
+In this section, we describe and discuss the results of the training and testing.
+                                                          
+We conduct the training and evaluation on the training dataset for both the dummy classifier and the SVM classifier. 
+On the training set, our baseline already achives a quite a solid performance in terms of accuracy due to the imbalanced nature of the dataset.
+The specific evaluation metrics results can be found below:
+                                                          
+| accuracy | balanced accuracy | F1     | Cohen's kappa | ROC    |
+|----------|-------------------|--------|---------------|--------|
+| 0.8315   | 0.4965            | 0.0858 | -.0070        | 0.4965 |
+
+The best performing SVM classifier achieves a slightly better performance on the training dataset, as can be seen below:
+                                                          
+| accuracy | balanced accuracy | F1     | Cohen's kappa | ROC    |
+|----------|-------------------|--------|---------------|--------|
+| 0.9082   | 0.5               | 0.0    | 0.0           | 0.5    |
+
+This performance indicates that the capacity of the classifier seems to be sufficient, although quite far from perfect.                                                           
+The performance of the SVM on the validation set presented below indicates that there are no signs of overfitting since the evaluation metrics closely match the results on the training dataset:
+                                                         
+| accuracy | balanced accuracy | F1     | Cohen's kappa | ROC    |
+|----------|-------------------|--------|---------------|--------|
+| 0.9082   | 0.5               | 0.0    | 0.0           | 0.5    | 
+                                                          
+Finally, the generalization performance of the SVM on the test set is presented and discussed below:
+
+| accuracy | balanced accuracy | F1     | Cohen's kappa | ROC    |
+|----------|-------------------|--------|---------------|--------|
+| 0.9082   | 0.5               | 0.0    | 0.0           | 0.5    |
+                                                          
+When inspecting the evaluation metrics, we see that the relatively solid accuracy of around 91% is misleading and actually just mirrors the label distribution of the dataset. The additional metrics like the balanced accuracy (0.5) and the ROC (0.5) clearly show that the classification is essentially performed at chance level. 
+Furthermore, we see that constructing a complex classifier only improves the performance in the ballpark of fractions of a percent. This goes to show that, for one, looking at a comprehensive set of evaluation metrics is crucial for an adequate results interpretation. On the other hand, it shows that a complex architecture does not guarantee a better performance. In this case, we essentially could have used the dummy classifier. 
+
+To sum up, we see that the architecture of the classifier does not significantly improve the performance of the tweet classifier. The classification is largely based on the label distribution in the training data. Future development steps in order to improve the model could include investigating the importance of the individual present features, addition of new features, as well as exploring larger hyperparameters spaces and other classifier architectures.                                                           
