@@ -213,7 +213,7 @@ The classifier is implemented in `code/classification/run_classifier.py`. The fi
     * the main SVM classifier as an instance of `sklearn.svm.LinearSVC`
         * given that the size of our training dataset exceeds tens of thousands of samples, the more efficient `LinearSVC` implementation was used (not the basic `SVC` classifier).
         * the classifier is implemented with the parameter `dual=False` because our number of features is smaller than the number of samples
-        * the SVM is ft using `GridSearchCV` (see "Evaluation schema" below)
+        * the SVM is fit using `GridSearchCV` (see "Evaluation schema" below)
     * the baseline dummy classifier as an instance of `sklearn.dummy.DummyClassifier` (see below)
     * the computation of an evaluation metrics suite for each of the classifiers (see below)
         * evaluation results are stored in `.csv` files in the `results/` directory. 
