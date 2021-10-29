@@ -32,7 +32,6 @@ The overall pipeline can be executed with the script `code/pipeline.sh`, which e
 - The script `code/load_data.sh` downloads the raw csv files containing the tweets and their metadata. They are stored in the folder `data/raw/` (which will be created if it does not yet exist).
 - The script `code/preprocessing.sh` executes all necessary preprocessing steps, including a creation of labels and splitting the data set.
 - The script `code/feature_extraction.sh` takes care of feature extraction.
-- The script `code/dimensionality_reduction.sh` takes care of dimensionality reduction.
 - The script `code/classification.sh` takes care of training and evaluating a classifier.
 - The script `code/application.sh` launches the application example.
 
@@ -58,7 +57,7 @@ Here, `input.csv` is a csv file (ideally the output of `create_labels.py`), whil
 The preprocessing steps to take can be configured with the following flags:
 - `-p` or `--punctuation`: A new column "tweet_no_punctuation" is created, where all punctuation is removed from the original tweet. (See `code/preprocessing/punctuation_remover.py` for more details)
 - `-sw` or `--stopwords`: A new column "tweet_no_stopwords" is created, where all stopwords are removed from the tokenized tweet (See `code/preprocessing/stopword_remover.py` for more details)
-- `-t` or `--tokenize`: flag inidicating whether tweets should be tokenized or not. Output will be appended to column named `tweet_tokenized` (can be changed in code/util.py/TWEET_TOKENIZED)
+- `-t` or `--tokenize`: flag indicating whether tweets should be tokenized or not. Output will be appended to column named `tweet_tokenized` (can be changed in code/util.py/TWEET_TOKENIZED)
 
 Moreover, the script accepts the following optional parameters:
 - `-e` or `--export` gives the path to a pickle file where an sklearn pipeline of the different preprocessing steps will be stored for later usage.
@@ -89,7 +88,7 @@ The features to be extracted can be configured with the following optional param
 - `-emb` or `--embedding`: Compute a 25-dimensional GloVe embedding for each tweet in the "tweet_tokenized" column of the data frame. (see code/feature_extraction/embeddings.py)
 - `-b` or `--binary`: Extract binary features, e.g. is media present or are there links in the tweet
 - `-ht` or `--hashtags`: computes the number of hashtags in a tweet from the "hashtags" column in the data frame. (see code/feature_extraction/numerical_features.py)
-- `-m` or `--mentoins`: computes the number of @ mentions in a tweet from the "mentions" column in the data frame. (see code/feature_extraction/numerical_features.py)
+- `-m` or `--mentions`: computes the number of @ mentions in a tweet from the "mentions" column in the data frame. (see code/feature_extraction/numerical_features.py)
 -  `-dt` or `--datetime`: extract date and time of tweet publication as integers
 
 Moreover, the script support importing and exporting fitted feature extractors with the following optional arguments:
@@ -98,7 +97,9 @@ Moreover, the script support importing and exporting fitted feature extractors w
 
 ## Dimensionality Reduction
 
-All python scripts and classes for dimensionality reduction can be found in `code/dimensionality_reduction/`.
+**Note:** In the implemented pipeline, no dimensionality reduction is used. The information below just describes the options provided to include this step.
+
+All python scripts and classes for dimensionality reduction can be found in `code/dimensionality_reduction/`.  
 
 The script `reduce_dimensionality.py` takes care of the overall dimensionality reduction procedure and can be invoked as follows:
 
@@ -128,12 +129,12 @@ Here, `input.pickle` is a pickle file of the respective data subset, produced by
 By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
 - `-l` or `--label_based`: Label frequency based dummy classifier that predicts the outcome based on the ratio of labels in the dataset.
 
-The classifier is then evaluated, using the suite of evaluation metrics as specified in the dictionary EVAL_METRICS in code/util.py. 
+The classifier is then evaluated, using the suite of evaluation metrics as specified in the dictionary EVAL_METRICS in `code/util.py`. 
 By default, the evaluation metrics are accuracy, balanced accuracy, F1 score, Cohen's kappa and the AUC of the ROC.
 The Evaluation results are written to a csv file.
 The following optional arguments can be provided:
-- `-cve`or `--cv_export`: path where the csv file containing evaluation results of the crossvalidation folds of the SVM classifier will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "cv_eval_results.csv" will be used.
-- `-de`or `--dummy_classifier_export`: path where the csv file containing evaluation results for the dummy classifier will be written. If not provided, default location util.py/EVAL_RESULTS_PATH + "dummy_classifier_eval_results.csv" will be used.
+- `-cve`or `--cv_export`: path where the csv file containing evaluation results of the crossvalidation folds of the SVM classifier will be written. If not provided, default location `util.py/EVAL_RESULTS_PATH` + "cv_eval_results.csv" will be used.
+- `-de`or `--dummy_classifier_export`: path where the csv file containing evaluation results for the dummy classifier will be written. If not provided, default location `util.py/EVAL_RESULTS_PATH` + "dummy_classifier_eval_results.csv" will be used.
 - `-svm`or `--svm_classifier`: flag if the SVM classifier will be used.
 - `-svmk`or `--svm_k`: number of folds to be used in the cross-validation GridSearch on the SVM classifier.
 
@@ -142,7 +143,7 @@ Moreover, the script support importing and exporting trained classifiers with th
 - `-i` or `--import_file`: Load a trained classifier from the given pickle file. Ignore all parameters that configure the classifier to use and don't retrain the classifier.
 - `-e` or `--export_file`: Export the trained classifier into the given pickle file.
 
-Finally, the optional argument `-s` or `--seed` determines the seed for intializing the random number generator (which may be important for some classifiers). 
+Finally, the optional argument `-s` or `--seed` determines the seed for initializing the random number generator (which may be important for some classifiers). 
 Using the same seed across multiple runs ensures reproducibility of the results. If no seed is set, the current system time will be used.
 
 ## Application
@@ -152,4 +153,4 @@ All python code for the application demo can be found in `code/application/`.
 The script `application.py` provides a simple command line interface, where the user is asked to type in their prospective tweet, which is then analyzed using the trained ML pipeline.
 The script can be invoked as follows:
 ```python -m code.application.application path/to/preprocessing.pickle path/to/feature_extraction.pickle path/to/dimensionality_reduction.pickle path/to/classifier.pickle```
-The four pickle files correspond to the exported versions for the different pipeline steps as created by `run_preprocessing.py`, `extract_features.py`, `reduce_dimensionality.py`, and `run_classifier.py`, respectively, with the `-e` option.
+The four pickle files correspond to the exported versions for the different pipeline steps as created by `run_preprocessing.py`, `extract_features.py`, `reduce_dimensionality.py` (not included in the current pipeline), and `run_classifier.py`, respectively, with the `-e` option.
