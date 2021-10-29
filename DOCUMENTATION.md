@@ -202,20 +202,24 @@ Given that our task involves binary classification, several classifier types lik
     * training a neral network might require even more data and is computationally quite expensive. Furthermore, optimizing the architecture of the network itself goes beyond the scope of such a project and might be an overkill for the task.
     * logistic regression is limited in that it only makes use of a linear combination of the features in logit space. This linearity assumption might be too strong when dealing with textual data.
     * random forest classifiers are not well-suited for data containing continuous features.
-    * given general experience, an SVM is usually a good choice for a basic but robust classifier. It is computationally easier and might use a non-linear projection kernel, such that it might be better suitable for higher-dimensional data. From personal experience, it also performs reasonably well on textual data.
+    * given general experience, an SVM is usually a good choice for a basic but robust classifier. It is computationally easier and might use a non-linear projection kernel, such that it might be better suitable for higher-dimensional data. From experience, it also performs reasonably well on textual data.
 
-Last but not least, sklearn also provides an simple API for using SVMs. For training the SVM, we chose to use sklearn's `GridSearchCV` method. 
-We decided to use 5-fold cross validation for training the classifier in order to maximally make use of our data (see "Evaluation schema" below). 
+Last but not least, sklearn also provides an simple API for using SVMs. For training the SVM, we chose to use sklearn's `GridSearchCV` method (see "Evaluation schema" below). 
 The classifier with the best-performing hyperparameters which is refit on the entire training dataset is then used for the downstream steps.
 
 **Implementation**
 
 The classifier is implemented in `code/classification/run_classifier.py`. The file implements two classifiers:
-    * the main SVM classifier as an instance of `sklearn.svm.SVC`
+    * the main SVM classifier as an instance of `sklearn.svm.LinearSVC`
+        * given that the size of our training dataset exceeds tens of thousands of samples, the more efficient `LinearSVC` implementation was used (not the basic `SVC` classifier).
+        * the classifier is implemented with the parameter `dual=False` because our number of features is smaller than the number of samples
+        * the SVM is ft using `GridSearchCV` (see "Evaluation schema" below)
     * the baseline dummy classifier as an instance of `sklearn.dummy.DummyClassifier` (see below)
     * the computation of an evaluation metrics suite for each of the classifiers (see below)
         * evaluation results are stored in `.csv` files in the `results/` directory. 
 
+      Returns a trained sklearn classifier instance.
+      
 ## Evaluation Metrics
 
 The classifier needs to be evaluated in order to assess how well it generalizes to predicting virality of unseen tweets. There are many different evaluation techniques, different with respect to their interpretability in different use cases. 
@@ -226,7 +230,7 @@ We decided to implement the following evaluation metrics for our project:
 * standard accuracy (as provided by the departure point code): proportion of correctly identified labels. This metric is used in many projects and can, therefore, be interesting for comparison purposes.
 * balanced accuracy (accuracy score compensated for imbalanced datasets): average of recall per class. This metric is better suited for class imbalanced datasets, whereby our dataset is an instance thereof.
 * F1-score (a score combining precision and recall): it is more representative than just the accuracy due to taking into account both correct identifications as well as successes of getting the underrepresented class.
-* Cohen's kappa: a more robust score for imblanaced datasets; it is also called interrater reliability score and accounts for the probability of corretc classification at random.
+* Cohen's kappa: a more robust score for imblanaced datasets; it is also called interrater reliability score and accounts for the probability of correct classification at random.
 * ROC (Receiver Operating Characteristic (curve)): outputs AUC (area under the curve) computed on the curve resulting from plotting the true positive rate of the classifier against its false positive rate. 
 
 As outlined above, each metric has specific advantages and disadvantages, respectively. This suite of evaluation metrics allows the user to get a comprehensive picture of the classifier performance, given diverse information. 
@@ -241,6 +245,8 @@ In `code/evaluation/` , we implement `evaluation_metrics.py` which contains the 
 The class has the following method:
 * `compute_metrics(self, y_true, y_pred, metrics=EVAL_METRIC)`: computes all evaluation metrics specified in `metrics` and creates a pd.DataFrame of the results, given vectors containing the ground truth and the classifier predictions. The results are stored into the default directory `results/`.
 
+  Returns a pd.Dataframe.
+  
 ## Evaluation Schema 
 
 **Motivation** 
@@ -257,9 +263,10 @@ Therefore, we use the method GridSearchCV which conveniently combines both train
 **Implementation**
 
 The cross validation implementation is integrated with grid search over hyper parameters of the SVM production classifier, as implemented by the sklearn method `GridSeachCV`.
-In code/classification/run_classifier.py, the evaluation schema is implemented as part of the training of the classifier:
-* the classifier is trained using the sklearn.model_selection.GridSearchCV method. 
-* the final classifier is accessed and dumped via the method's attribute best_estimator_
+In `code/classification/run_classifier.py`, the evaluation schema is implemented as part of the training of the classifier:
+* the classifier is trained using the `sklearn.model_selection.GridSearchCV.fit()` method. 
+    * the parameters over which the grid search is performed are implemented in `code/classification/run_classifier.py` as a distionary `parameters = {"penalty": ("l1", "l2"), "C": [1,2], "dual": (False)}`. This selection is motivated by the parameter combinations supported by `LinearSVC` and serve as a proof of concept for runtime reasons.                                                        
+* the final classifier is accessed and dumped via the method's attribute `best_estimator_`.
     * the evaluation metrics described above are computed on this best performing fitted production classifier.
     
 ## Evaluation Baseline
@@ -267,13 +274,14 @@ In code/classification/run_classifier.py, the evaluation schema is implemented a
 **Motivation**
 
 We decided to use a stratified (a.k.a. label frequency based) baseline classifier to account for the embalance of the labels.
-A stratified dummy classifier should be more robust in regard to this and therefore is a more challenging baseline to surpass.
+A stratified dummy classifier should be more robust in regard to this and, therefore, is a more challenging baseline to surpass.
 Using this dummy classifier we also want to test whether "fancy" features are necessary or not for the classification. 
 
 **Implementation**
 
 The dummy classifier is also implemented in `code/classification/run_classifier.py`:
     * the baseline dummy classifier is an instance of `sklearn.dummy.DummyClassifier`
+        * the parameter `strategy = "stratified"` is used                                                  
     * the evaluation metrics suite is computed for the baseline  
         * evaluation results are stored in `.csv` files in the `results/` directory 
 
