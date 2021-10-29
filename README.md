@@ -88,7 +88,7 @@ The features to be extracted can be configured with the following optional param
 - `-c` or `--char_length`: Count the number of characters in the "tweet" column of the data frame. (see code/feature_extraction/character_length.py)
 - `-emb` or `--embedding`: Compute a 25-dimensional GloVe embedding for each tweet in the "tweet_tokenized" column of the data frame. (see code/feature_extraction/embeddings.py)
 - `-b` or `--binary`: Extract binary features, e.g. is media present or are there links in the tweet
-- `-h` or `--hashtags`: computes the number of hashtags in a tweet from the "hashtags" column in the data frame. (see code/feature_extraction/numerical_features.py)
+- `-ht` or `--hashtags`: computes the number of hashtags in a tweet from the "hashtags" column in the data frame. (see code/feature_extraction/numerical_features.py)
 - `-m` or `--mentoins`: computes the number of @ mentions in a tweet from the "mentions" column in the data frame. (see code/feature_extraction/numerical_features.py)
 -  `-dt` or `--datetime`: extract date and time of tweet publication as integers
 
@@ -126,7 +126,7 @@ The script `run_classifier.py` can be used to train and/or evaluate a given clas
 Here, `input.pickle` is a pickle file of the respective data subset, produced by either `extract_features.py` or `reduce_dimensionality.py`. 
 
 By default, this data is used to train a classifier, which is specified by one of the following optional arguments:
-- `-m` or `--majority`: Majority vote classifier that always predicts the majority class.
+- `-l` or `--label_based`: Label frequency based dummy classifier that predicts the outcome based on the ratio of labels in the dataset.
 
 The classifier is then evaluated, using the suite of evaluation metrics as specified in the dictionary EVAL_METRICS in code/util.py. 
 By default, the evaluation metrics are accuracy, balanced accuracy, F1 score, Cohen's kappa and the AUC of the ROC.
