@@ -1,0 +1,21 @@
+#!/bin/bash
+#$ -N feature_extraction
+#$ -l mem=2G
+#$ -cwd
+#$ -pe default 2
+#$ -o $HOME
+#$ -e $HOME
+#$ -l h=*cippy*
+
+export PATH="$HOME/miniconda/bin:$PATH"
+eval "$(conda shell.bash hook)"
+conda activate MLinPractice
+
+# create directory if not yet existing
+mkdir -p data/feature_extraction/
+
+# run feature extraction on training set (may need to fit extractors)
+echo "  training set embedding computation"
+python -m code.feature_extraction.extract_features data/preprocessing/split/training.csv data/feature_extraction/training.pickle -e data/feature_extraction/pipeline.pickle --char_length --embedding -dt -b -m -ht
+
+conda deactivate

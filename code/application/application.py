@@ -15,24 +15,24 @@ from code.util import COLUMN_TWEET
 
 # setting up CLI
 parser = argparse.ArgumentParser(description = "Application")
-parser.add_argument("preprocessing_file", help = "path to the pickle file containing the preprocessing")
+parser.add_argument("preprocessing_tokenize_file", help = "path to the pickle file containing the tokenization preprocessing")
+parser.add_argument("preprocessing_stopword_file", help = "path to the pickle file containing the stopword preprocessing")
 parser.add_argument("feature_file", help = "path to the pickle file containing the feature extraction")
-parser.add_argument("dim_red_file", help = "path to the pickle file containing the dimensionality reduction")
 parser.add_argument("classifier_file", help = "path to the pickle file containing the classifier")
 args = parser.parse_args()
 
 # load all the pipeline steps
-with open(args.preprocessing_file, 'rb') as f_in:
-    preprocessing = pickle.load(f_in)
+with open(args.preprocessing_tokenize_file, 'rb') as f_in:
+    preprocessing_tokenize = pickle.load(f_in)
+with open(args.preprocessing_stopwords_file, 'rb') as f_in:
+    preprocessing_stopwords = pickle.load(f_in)
 with open(args.feature_file, 'rb') as f_in:
     feature_extraction = pickle.load(f_in)
-with open(args.dim_red_file, 'rb') as f_in:
-    dimensionality_reduction = pickle.load(f_in)
 with open(args.classifier_file, 'rb') as f_in:
     classifier = pickle.load(f_in)
 
 # chain them together into a single pipeline
-pipeline = make_pipeline(preprocessing, feature_extraction, dimensionality_reduction, classifier)
+pipeline = make_pipeline(preprocessing_tokenize, preprocessing_stopwords, feature_extraction, classifier)
 
 # headline output
 print("Welcome to ViralTweeter v0.1!")
